@@ -411,7 +411,18 @@ label.fl{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-
 .logo-ring img{width:100%;height:100%;object-fit:contain;padding:5px;box-sizing:border-box}
 .top-bar{padding:10px 16px}
 .tb-biz{font-size:15px}
-.sync-pill{font-size:9.5px;color:rgba(255,255,255,.62);margin-top:3px;letter-spacing:.2px}
+.sync-pill{font-size:9.5px;color:rgba(255,255,255,.7);margin-top:3px;letter-spacing:.2px;display:flex;align-items:center;gap:5px}
+.sdot{width:7px;height:7px;border-radius:50%;background:#10B981;flex:none;animation:lat 2.4s ease-in-out infinite}
+.sdot.warn{background:#F5A623;animation:lat 1s ease-in-out infinite}
+@keyframes lat{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+.auto-card{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:13px;background:linear-gradient(135deg,#ECFDF5,#F0FDFA);border:1.5px solid #A7F3D0;margin-bottom:12px}
+.auto-card.warn{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-color:#FDE68A}
+.auto-card .ac-dot{width:11px;height:11px;border-radius:50%;background:#10B981;flex:none;animation:lat 2.4s ease-in-out infinite}
+.auto-card.warn .ac-dot{background:#F59E0B;animation:lat 1s ease-in-out infinite}
+.auto-card .ac-t{font-size:13px;font-weight:700;color:#065F46}
+.auto-card.warn .ac-t{color:#92400E}
+.auto-card .ac-s{font-size:11.5px;color:#047857;margin-top:2px}
+.auto-card.warn .ac-s{color:#B45309}
 .ql-pr{width:74px;padding:6px;border:1.5px solid var(--line);border-radius:8px;font-family:var(--font);font-size:12px;text-align:right;background:var(--card);color:var(--ink)}
 .q-edited{font-size:10px;color:var(--gold);font-weight:700;margin-left:6px}
 .cli-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--card)}
@@ -1011,6 +1022,15 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
     </div>
     <div class="wrap">
 
+      <!-- GUARDADO AUTOMÁTICO -->
+      <div class="auto-card" id="autoCard">
+        <div class="ac-dot"></div>
+        <div style="flex:1">
+          <div class="ac-t" id="autoT">Guardado automático activo</div>
+          <div class="ac-s" id="autoS">Tus datos se guardan solos cada 5 segundos.</div>
+        </div>
+      </div>
+
       <!-- LOGO -->
       <div class="ob-section" style="margin-bottom:12px">
         <div class="ob-section-title">Logo</div>
@@ -1038,6 +1058,17 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
       <div class="ob-section" style="margin-bottom:12px">
         <div class="ob-section-title">Mis clientes</div>
         <div id="cliList"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+          <button class="btn btn-ghost btn-sm" onclick="descargarClientesPDF()">📄 Lista en PDF</button>
+          <button class="btn btn-ghost btn-sm" onclick="descargarClientesExcel()">📊 Lista en Excel</button>
+        </div>
+      </div>
+
+      <!-- RESPALDO / ANÁLISIS -->
+      <div class="ob-section" style="margin-bottom:12px">
+        <div class="ob-section-title">Respaldo y análisis</div>
+        <div class="hint" style="margin-bottom:10px">Descarga toda tu información en un Excel con hojas separadas (ventas, cotizaciones, detalle, clientes y productos) y fechas listas para analizar.</div>
+        <button class="btn btn-elec btn-sm" style="width:100%" onclick="exportarTodoExcel()">📊 Descargar toda mi data en Excel</button>
       </div>
 
       <!-- CONDICIONES -->
@@ -1154,7 +1185,18 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
         </select>
       </div>
     </div>
-    <div class="fg"><label>Notas adicionales (opcional)</label><input class="fi" id="mqNotes" placeholder="Condiciones especiales, garantía, etc."></div>
+    <div class="fg"><label>Condiciones de esta cotización</label>
+      <select class="fi" id="mqCondMode" onchange="toggleCond()">
+        <option value="estandar">Aplican las condiciones estándar</option>
+        <option value="extra">Estándar + una observación adicional</option>
+        <option value="otras">Otras condiciones (reemplazan a las estándar)</option>
+      </select>
+      <div class="hint" id="mqCondHint">Se usan la validez y la frase de cierre configuradas en Mi Negocio.</div>
+    </div>
+    <div class="fg" id="mqCondBox" style="display:none">
+      <label id="mqCondLbl">Observación adicional</label>
+      <textarea class="fi" id="mqCondTxt" rows="3" style="resize:vertical" placeholder="Escribe aquí lo que debe salir en el PDF"></textarea>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
       <button class="btn btn-ghost" onclick="closeM('mQuote')">Cancelar</button>
       <button class="btn btn-navy" id="mqSaveBtn" onclick="saveQuote()">Guardar cotización</button>
@@ -1562,12 +1604,45 @@ function normDB(o){
 }
 function readLocal(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
 function writeLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(DB));return true;}catch(e){return false;}}
+function haceCuanto(ts){
+  if(!ts)return '';
+  const sg=Math.max(0,Math.round((Date.now()-ts)/1000));
+  if(sg<10)return 'hace un momento';
+  if(sg<60)return 'hace '+sg+' segundos';
+  const m=Math.round(sg/60);
+  if(m<60)return 'hace '+m+' minuto'+(m===1?'':'s');
+  return 'a las '+new Date(ts).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+}
+// Estado del guardado, siempre a la vista y actualizado cada segundo
 function updPill(){
-  const el=$('syncPill');if(!el)return;
-  if(!ok){el.textContent='💾 Guardado en este equipo';return;}
-  if(subiendo){el.textContent='⏳ Guardando…';return;}
-  if(dirty||fallo){el.textContent=navigator.onLine?'⏳ Cambios sin subir':'📴 Sin internet · guardado aquí';return;}
-  el.textContent=ultimaNube?('☁️ Guardado '+new Date(ultimaNube).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'})):'☁️ Conectado';
+  const el=$('syncPill');
+  const alerta=(dirty||fallo)&&!subiendo;
+  if(el){
+    let txt;
+    if(!ok) txt='Guardado en este equipo';
+    else if(subiendo) txt='Guardando…';
+    else if(!navigator.onLine&&alerta) txt='Sin internet · guardado en el equipo';
+    else if(alerta) txt='Guardando en unos segundos…';
+    else txt='Guardado automático · '+(ultimaNube?haceCuanto(ultimaNube):'activo');
+    el.innerHTML='<span class="sdot'+(alerta?' warn':'')+'"></span>'+escS8(txt);
+  }
+  const card=$('autoCard');
+  if(card){
+    card.className='auto-card'+(alerta?' warn':'');
+    if(!ok){
+      $('autoT').textContent='Guardado en este equipo';
+      $('autoS').textContent='Todo lo que registras queda guardado aquí, aunque cierres la app.';
+    } else if(alerta&&!navigator.onLine){
+      $('autoT').textContent='Sin internet ahora mismo';
+      $('autoS').textContent='Tus datos están guardados en este equipo y subirán solos al volver la señal.';
+    } else if(alerta){
+      $('autoT').textContent='Guardando tus últimos cambios…';
+      $('autoS').textContent='Se suben en unos segundos. No necesitas hacer nada.';
+    } else {
+      $('autoT').textContent='Guardado automático activo';
+      $('autoS').textContent=ultimaNube?('Último respaldo en la nube '+haceCuanto(ultimaNube)+'. Se revisa cada 5 segundos.'):'Tus datos se guardan solos cada 5 segundos.';
+    }
+  }
 }
 // saveData() se sigue llamando desde toda la app: ahora solo marca el cambio.
 function saveData(){
@@ -1594,6 +1669,7 @@ async function subirNube(){
 function iniciarAutoguardado(){
   clearInterval(autoTimer);
   autoTimer=setInterval(subirNube,AUTOSAVE_MS);
+  setInterval(updPill,1000);   // el indicador se mantiene vivo a la vista
   window.addEventListener('online',subirNube);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')subirNube();});
   window.addEventListener('pagehide',()=>{ if(dirty)writeLocal(); });
@@ -1675,12 +1751,182 @@ function autoCompletarPorDoc(){
 }
 function renderClientes(){
   const el=$('cliList');if(!el)return;
-  const list=[...(DB.clients||[])].sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  const list=clientesOrdenados();
   if(!list.length){el.innerHTML='<div class="hint">Aún no hay clientes. Se registran solos al guardar una cotización.</div>';return;}
   el.innerHTML=list.map(c=>`<div class="cli-row">
-      <div class="cn"><b>${escS8(c.name)}</b><span>${c.doc?`<span class="doc-badge">${c.docType||'DOC'} ${c.doc}</span> `:''}${escS8(c.tel||'')}${c.addr?' · '+escS8(c.addr):''}</span></div>
+      <div class="cn"><b>${escS8(c.name)}</b><span>${c.doc?`<span class="doc-badge">${c.docType||'DOC'} ${c.doc}</span> `:''}${escS8(c.tel||'')}${c.addr?' · '+escS8(c.addr):''}${c.st.n?`<br>${c.st.n} cotización${c.st.n===1?'':'es'} · ${fmt(c.st.cotizado)}`:''}</span></div>
       <button class="cli-x" onclick="delClient('${clientKey(c.doc,c.name)}')" title="Eliminar">×</button>
     </div>`).join('');
+}
+// ── Estadística de cada cliente a partir de sus cotizaciones ──
+function statsCliente(c){
+  const k=clientKey(c.doc,c.name);
+  const qs=(DB.quotes||[]).filter(q=>clientKey(q.doc,q.cli)===k);
+  const won=qs.filter(q=>q.status==='won');
+  return {n:qs.length, won:won.length,
+    monto:won.reduce((a,q)=>a+(Number(q.tot)||0),0),
+    cotizado:qs.reduce((a,q)=>a+(Number(q.tot)||0),0),
+    ult:qs.length?Math.max(...qs.map(q=>q.ts||0)):0};
+}
+function clientesOrdenados(){
+  return [...(DB.clients||[])].map(c=>({...c,st:statsCliente(c)}))
+    .sort((a,b)=>b.st.cotizado-a.st.cotizado||(a.name||'').localeCompare(b.name||''));
+}
+// ── Descargar el directorio en Excel (CSV que Excel abre directo) ──
+function descargarClientesExcel(){
+  const list=clientesOrdenados();
+  if(!list.length){toast('Todavía no tienes clientes registrados');return;}
+  const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const filas=[['Cliente','Tipo de documento','Nro. de documento','Teléfono','Dirección','Cotizaciones','Cotizaciones ganadas','Monto cotizado (S/)','Monto ganado (S/)','Última cotización']];
+  list.forEach(c=>filas.push([c.name,c.docType||'',c.doc||'',c.tel||'',c.addr||'',
+    c.st.n,c.st.won,c.st.cotizado.toFixed(2),c.st.monto.toFixed(2),c.st.ult?fechaS8(c.st.ult):'']));
+  const csv='\ufeff'+filas.map(f=>f.map(esc).join(';')).join('\r\n');
+  const hoy=new Date().toISOString().slice(0,10);
+  triggerBlobDownload(new Blob([csv],{type:'text/csv;charset=utf-8'}),'Clientes_'+hoy+'.csv');
+  toast('✓ Lista descargada',true);
+}
+// ── Descargar el directorio en PDF ──
+async function descargarClientesPDF(){
+  const list=clientesOrdenados();
+  if(!list.length){toast('Todavía no tienes clientes registrados');return;}
+  const P=DB.profile||{};const A=' data-pdf-atom="1"';
+  let h='<div class="pdf-s8">';
+  h+='<div class="cot-head"'+A+'><div>'+
+     (P.logo?'<img src="'+P.logo+'" style="max-height:80px;max-width:190px;object-fit:contain;margin-bottom:8px" alt="logo">':'')+
+     '<div class="cot-biz">'+escS8(P.biz||CU.b||'')+'</div>'+
+     '<div class="cot-meta">'+(P.ruc?'RUC '+escS8(P.ruc):'')+'</div></div>'+
+     '<div><div class="cot-id">MIS CLIENTES</div>'+
+     '<div class="cot-fecha">'+fechaS8(Date.now())+'<br>'+list.length+' cliente'+(list.length===1?'':'s')+'</div></div></div>';
+  h+='<div class="tbl-wrap"'+A+'><table class="tbl"><thead><tr>'+
+     '<th>Cliente</th><th>RUC / DNI</th><th>Contacto</th><th class="r">Cotiz.</th><th class="r">Cotizado</th><th class="r">Ganado</th>'+
+     '</tr></thead><tbody>'+
+     list.map(c=>'<tr'+A+'><td><b>'+escS8(c.name)+'</b>'+(c.addr?'<div style="font-size:10px;color:#64748B">'+escS8(c.addr)+'</div>':'')+'</td>'+
+       '<td>'+(c.doc?escS8((c.docType||'')+' '+c.doc):'—')+'</td>'+
+       '<td>'+escS8(c.tel||'—')+'</td>'+
+       '<td class="r">'+c.st.n+'</td>'+
+       '<td class="r">'+solS8(c.st.cotizado)+'</td>'+
+       '<td class="r" style="font-weight:600">'+solS8(c.st.monto)+'</td></tr>').join('')+
+     '</tbody></table></div>';
+  const tot=list.reduce((a,c)=>a+c.st.cotizado,0),gan=list.reduce((a,c)=>a+c.st.monto,0);
+  h+='<div class="tbl-wrap"'+A+'><table class="tbl"><tbody>'+
+     '<tr><td style="font-weight:600">Total cotizado</td><td class="r" style="font-weight:600">'+solS8(tot)+'</td></tr>'+
+     '<tr><td style="font-weight:700;color:#0A1F44">Total ganado</td><td class="r" style="font-weight:700;color:#0A1F44">'+solS8(gan)+'</td></tr>'+
+     '</tbody></table></div>';
+  h+='</div>';
+  toast('Generando PDF...');
+  const hoy=new Date().toISOString().slice(0,10);
+  const r=await rasterizarPdfS8(h,'','Clientes_'+hoy+'.pdf',false);
+  toast(r?'✓ PDF descargado':'No se pudo generar el PDF',!!r);
+}
+// ══ EXPORTAR TODA LA DATA A EXCEL (listo para Power BI) ════════════
+// Un solo archivo .xlsx con una hoja por tabla y las fechas ya partidas
+// en columnas, para que en Power BI solo haya que actualizar el origen.
+function xlsEsc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function colLetra(n){let s='';while(n>0){const r=(n-1)%26;s=String.fromCharCode(65+r)+s;n=Math.floor((n-1)/26);}return s;}
+function hojaXml(filas){
+  const rows=filas.map((fila,ri)=>{
+    const celdas=fila.map((v,ci)=>{
+      const ref=colLetra(ci+1)+(ri+1);
+      if(typeof v==='number'&&isFinite(v)) return '<c r="'+ref+'"><v>'+v+'</v></c>';
+      return '<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+xlsEsc(v==null?'':v)+'</t></is></c>';
+    }).join('');
+    return '<row r="'+(ri+1)+'">'+celdas+'</row>';
+  }).join('');
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+rows+'</sheetData></worksheet>';
+}
+async function construirXlsx(hojas){   // hojas = [{nombre, filas}]
+  const zip=new JSZip();
+  zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'+
+    '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'+
+    '<Default Extension="xml" ContentType="application/xml"/>'+
+    '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+
+    hojas.map((h,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+
+    '</Types>');
+  zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
+  const xl=zip.folder('xl');
+  xl.file('workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+
+    hojas.map((h,i)=>'<sheet name="'+xlsEsc(h.nombre).slice(0,31)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+
+    '</sheets></workbook>');
+  xl.folder('_rels').file('workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+    hojas.map((h,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+
+    '</Relationships>');
+  const ws=xl.folder('worksheets');
+  hojas.forEach((h,i)=>ws.file('sheet'+(i+1)+'.xml',hojaXml(h.filas)));
+  return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+// Columnas de fecha ya desglosadas: Power BI las lee sin transformar nada
+const DIAS_SEM=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MESES_NOM=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'];
+function p2(n){return String(n).padStart(2,'0');}
+function colsFecha(ts){
+  if(!ts)return ['','','','','','','',''];
+  const d=new Date(ts);
+  const iso=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds());
+  return [iso, d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()), p2(d.getHours())+':'+p2(d.getMinutes()),
+    d.getFullYear(), d.getMonth()+1, MESES_NOM[d.getMonth()], d.getFullYear()+'-'+p2(d.getMonth()+1), DIAS_SEM[d.getDay()]];
+}
+const CAB_FECHA=['fecha_hora','fecha','hora','anio','mes_num','mes_nombre','anio_mes','dia_semana'];
+async function exportarTodoExcel(){
+  if(typeof JSZip==='undefined'){toast('Necesitas estar conectada para generar el Excel');return;}
+  toast('Preparando tu Excel...');
+  try{
+    const P=DB.profile||{};const negocio=P.biz||CU.b||'';
+    const qById=id=>(DB.quotes||[]).find(q=>q.id===id)||{};
+
+    const ventas=[['id_venta','id_cotizacion',...CAB_FECHA,'negocio','cliente','cliente_documento','producto','cantidad','canal','total_soles']];
+    (DB.sales||[]).forEach((v,i)=>{
+      const q=v.fromQ?qById(v.fromQ):{};
+      ventas.push(['V'+String(i+1).padStart(4,'0'),v.fromQ||'',...colsFecha(v.ts),negocio,q.cli||v.cli||'',q.doc||'',
+        v.prod||'',Number(v.qty)||0,v.canal||'',Number(v.total)||0]);
+    });
+
+    const cots=[['id_cotizacion',...CAB_FECHA,'negocio','cliente','tipo_documento','documento','telefono','direccion','canal','estado',
+      'subtotal_soles','igv_soles','total_soles','entrega','forma_pago','condiciones_modo','condiciones_texto','veces_editada','fecha_edicion']];
+    (DB.quotes||[]).forEach(q=>{
+      const est=q.status==='won'?'Ganada':(q.status==='lost'?'Perdida':'Pendiente');
+      cots.push([q.id||'',...colsFecha(q.ts),negocio,q.cli||'',q.docType||'',q.doc||'',q.tel||'',q.addr||'',q.chan||'',est,
+        Number(q.sub)||0,Number(q.igv)||0,Number(q.tot)||0,q.delivery||'',q.payMode||'',
+        q.condMode||'estandar',q.condText||q.notes||'',Number(q.rev)||0,q.editedTs?colsFecha(q.editedTs)[0]:'']);
+    });
+
+    const det=[['id_cotizacion',...CAB_FECHA,'cliente','estado','producto','cantidad','precio_unitario','afecto_igv','importe_soles']];
+    (DB.quotes||[]).forEach(q=>{
+      const est=q.status==='won'?'Ganada':(q.status==='lost'?'Perdida':'Pendiente');
+      (q.lines||[]).forEach(l=>det.push([q.id||'',...colsFecha(q.ts),q.cli||'',est,l.name||'',
+        Number(l.qty)||0,Number(l.price)||0,l.igv?'Sí':'No',(Number(l.price)||0)*(Number(l.qty)||1)]));
+    });
+
+    const cli=[['cliente','tipo_documento','documento','telefono','direccion','cotizaciones','cotizaciones_ganadas',
+      'monto_cotizado_soles','monto_ganado_soles','ultima_cotizacion']];
+    clientesOrdenados().forEach(c=>cli.push([c.name||'',c.docType||'',c.doc||'',c.tel||'',c.addr||'',
+      c.st.n,c.st.won,c.st.cotizado,c.st.monto,c.st.ult?colsFecha(c.st.ult)[1]:'']));
+
+    const prods=[['producto','categoria','precio_soles','afecto_igv','descripcion','veces_cotizado','unidades_cotizadas']];
+    (DB.products||[]).forEach(p=>{
+      let veces=0,uds=0;
+      (DB.quotes||[]).forEach(q=>(q.lines||[]).forEach(l=>{if(l.name===p.name){veces++;uds+=Number(l.qty)||0;}}));
+      prods.push([p.name||'',p.cat||'',Number(p.price)||0,p.igv?'Sí':'No',p.desc||'',veces,uds]);
+    });
+
+    const info=[['campo','valor'],
+      ['negocio',negocio],['ruc',P.ruc||''],['responsable',CU.n],['telefono',P.tel||''],['direccion',P.addr||''],
+      ['fecha_exportacion',colsFecha(Date.now())[0]],
+      ['total_ventas_registradas',(DB.sales||[]).length],['total_cotizaciones',(DB.quotes||[]).length],
+      ['total_clientes',(DB.clients||[]).length],['total_productos',(DB.products||[]).length]];
+
+    const blob=await construirXlsx([
+      {nombre:'Ventas',filas:ventas},{nombre:'Cotizaciones',filas:cots},{nombre:'Detalle_Cotizaciones',filas:det},
+      {nombre:'Clientes',filas:cli},{nombre:'Productos',filas:prods},{nombre:'Info',filas:info}]);
+    const hoy=new Date();
+    triggerBlobDownload(blob,'MiNegocio_'+(negocio||'datos').replace(/[^A-Za-z0-9]/g,'').slice(0,18)+'_'+hoy.getFullYear()+p2(hoy.getMonth()+1)+p2(hoy.getDate())+'.xlsx');
+    toast('✓ Excel descargado',true);
+  }catch(e){ toast('No se pudo generar el Excel'); }
 }
 function delClient(k){
   if(!confirm('¿Quitar este cliente del directorio? Las cotizaciones ya hechas no se modifican.'))return;
@@ -1885,8 +2131,18 @@ function populateSels(){
 
 // ══ QUOTER ═════════════════════════════════════════════════════════
 let editQI=-1;
+function toggleCond(){
+  const m=$('mqCondMode').value;
+  const box=$('mqCondBox'),lbl=$('mqCondLbl'),hint=$('mqCondHint'),txt=$('mqCondTxt');
+  if(m==='estandar'){box.style.display='none';hint.textContent='Se usan la validez y la frase de cierre configuradas en Mi Negocio.';}
+  else if(m==='extra'){box.style.display='';lbl.textContent='Observación adicional';txt.placeholder='Ej: El precio no incluye el traslado a mina.';
+    hint.textContent='Se mantienen las condiciones estándar y se agrega tu observación.';}
+  else{box.style.display='';lbl.textContent='Condiciones propias de esta cotización';txt.placeholder='Ej: Pago 50% al inicio y 50% contra entrega. Validez 5 días.';
+    hint.textContent='Estas condiciones reemplazan a las estándar solo en esta cotización.';}
+}
 function limpiarFormCot(){
-  qLines=[];['mqCli','mqTel','mqNotes','mqDelivery','mqPayment','mqDoc','mqAddr'].forEach(id=>$(id).value='');
+  qLines=[];['mqCli','mqTel','mqDelivery','mqPayment','mqDoc','mqAddr','mqCondTxt'].forEach(id=>$(id).value='');
+  $('mqCondMode').value='estandar';toggleCond();
   $('mqChan').value='WhatsApp';$('mqDocSt').textContent='';$('mqLines').innerHTML='';$('mqTots').style.display='none';
   llenarClientes();$('mqCliSel').value='';
 }
@@ -1901,7 +2157,9 @@ function openEditQuote(idx){
   const q=DB.quotes[idx];if(!q)return;
   editQI=idx;populateSels();limpiarFormCot();
   $('mqCli').value=q.cli||'';$('mqDoc').value=q.doc||'';$('mqTel').value=q.tel||'';$('mqAddr').value=q.addr||'';
-  $('mqChan').value=q.chan||'WhatsApp';$('mqNotes').value=q.notes||'';
+  $('mqChan').value=q.chan||'WhatsApp';
+  $('mqCondMode').value=q.condMode||(q.notes?'extra':'estandar');
+  $('mqCondTxt').value=q.condText||q.notes||'';toggleCond();
   $('mqDelivery').value=(q.delivery&&q.delivery!=='A convenir')?q.delivery:'';
   $('mqPayment').value=q.payMode||'';
   qLines=(q.lines||[]).map(l=>({...l}));renderQL();
@@ -1945,7 +2203,9 @@ function saveQuote(){
     tel:$('mqTel').value.trim(),chan:$('mqChan').value,lines:qLines.map(l=>({...l})),sub,igv,tot,
     delivery:$('mqDelivery').value.trim()||'A convenir',
     payMode:$('mqPayment').value||(DB.profile&&DB.profile.payment)||'Contraentrega',
-    notes:$('mqNotes').value.trim()};
+    condMode:$('mqCondMode').value,
+    condText:$('mqCondMode').value==='estandar'?'':$('mqCondTxt').value.trim(),
+    notes:$('mqCondMode').value==='extra'?$('mqCondTxt').value.trim():''};
   upsertClient(datos);
   if(editQI>=0){
     const q=DB.quotes[editQI];
@@ -1997,7 +2257,7 @@ function openQD(idx){
       <div class="tr2"><span>IGV</span><span>${fmt(q.igv)}</span></div>
       <div class="tr2 big"><span>TOTAL</span><span>${fmt(q.tot)}</span></div>
     </div>
-    ${q.notes?`<div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic">"${q.notes}"</div>`:''}`;
+    ${(q.condText||q.notes)?`<div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic">${q.condMode==='otras'?'Condiciones propias: ':''}"${escS8(q.condText||q.notes)}"</div>`:''}`;
   const acts=$('qdActions');
   if(q.status==='pending'){
     acts.innerHTML=`
@@ -2806,12 +3066,14 @@ function construirCotizacionS8(q, db, persona){
      '<div style="font-size:12px;line-height:1.8">'+
      '<b>Entrega:</b> '+escS8(q.delivery||'A convenir')+'<br>'+
      '<b>Forma de pago:</b> '+escS8(q.payMode||'Contraentrega')+
-     (q.notes?'<br><b>Notas:</b> '+escS8(q.notes):'')+
+     ((q.condMode==='otras'&&q.condText)?'<br><b>Condiciones:</b> '+escS8(q.condText):'')+
+     (((q.condMode!=='otras')&&(q.condText||q.notes))?'<br><b>Observación:</b> '+escS8(q.condText||q.notes):'')+
      '</div></div>';
 
-  h+='<div style="font-size:10.5px;color:#94A3B8;text-align:center;margin-top:14px"'+A+'>'+
+  h+=(q.condMode==='otras')?'':'<div style="font-size:10.5px;color:#94A3B8;text-align:center;margin-top:14px"'+A+'>'+
      (P.validity==='Negociable'?'Validez de la cotizaci\u00f3n: negociable.':'Cotizaci\u00f3n v\u00e1lida por '+escS8(P.validity||'15 d\u00edas')+' calendario desde su emisi\u00f3n.')+
      (q.editedTs?' \u00b7 Actualizada el '+fechaS8(q.editedTs)+'.':'')+'</div>';
+  if(q.condMode==='otras'&&q.editedTs) h+='<div style="font-size:10.5px;color:#94A3B8;text-align:center;margin-top:14px"'+A+'>Actualizada el '+fechaS8(q.editedTs)+'.</div>';
   h+='</div>';
   return h;
 }
