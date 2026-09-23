@@ -48,8 +48,9 @@
 .adm-status.load{color:var(--muted)}.adm-status.ok{color:var(--emer)}.adm-status.err{color:var(--crim)}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh}
-body{max-width:540px;margin:0 auto;padding-bottom:80px}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body{max-width:540px;width:100%;margin:0 auto;padding-bottom:80px;box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
 h1,h2,h3{font-weight:700;letter-spacing:-.3px}
 
 /* ══ DARK MODE — HIGH END ══════════════════════════════════════ */
@@ -480,6 +481,16 @@ label.fl{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-
 .chart-title{font-size:12px;font-weight:700;color:var(--ink)}
 .chart-sub{font-size:10px;color:var(--muted)}
 .chart-wrap{position:relative}
+/* DONUT ROW — apilada en el celular para usar todo el ancho */
+.donut-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.donut-grid>*{min-width:0}
+.donut-row{display:flex;align-items:center;gap:12px}
+.donut-c{width:96px;height:96px;flex-shrink:0}
+@media (max-width:560px){
+  .donut-grid{grid-template-columns:1fr}
+  .donut-c{width:122px;height:122px}
+  .dl-row{font-size:12px}
+}
 /* DONUT LEGEND */
 .donut-legend{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0}
 .dl-row{display:flex;align-items:center;gap:7px;font-size:11px}
@@ -959,18 +970,18 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
       </div>
 
       <!-- DONUT ROW -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div class="donut-grid">
         <div class="chart-card" style="margin-bottom:0">
-          <div class="chart-head" style="margin-bottom:6px"><div class="chart-title" style="font-size:11px">Por producto</div></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:90px;height:90px;flex-shrink:0"><canvas id="chartProd"></canvas></div>
+          <div class="chart-head" style="margin-bottom:6px"><div class="chart-title">Por producto</div></div>
+          <div class="donut-row">
+            <div class="donut-c"><canvas id="chartProd"></canvas></div>
             <div class="donut-legend" id="legendProd"></div>
           </div>
         </div>
         <div class="chart-card" style="margin-bottom:0">
-          <div class="chart-head" style="margin-bottom:6px"><div class="chart-title" style="font-size:11px">Por canal</div></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:90px;height:90px;flex-shrink:0"><canvas id="chartCanal"></canvas></div>
+          <div class="chart-head" style="margin-bottom:6px"><div class="chart-title">Por canal</div></div>
+          <div class="donut-row">
+            <div class="donut-c"><canvas id="chartCanal"></canvas></div>
             <div class="donut-legend" id="legendCanal"></div>
           </div>
         </div>
