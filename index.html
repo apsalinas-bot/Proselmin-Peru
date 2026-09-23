@@ -486,7 +486,8 @@ label.fl{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-
 .dl-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
 .dl-name{flex:1;color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dl-val{color:var(--muted);font-size:10px}
-.dl-pct{font-weight:700;color:var(--ink);min-width:28px;text-align:right}
+.dl-pct{font-weight:700;color:var(--ink);min-width:30px;text-align:right;font-size:11.5px;white-space:nowrap}
+.dl-mon{display:block;font-size:10px;color:var(--muted);font-weight:600;margin-top:1px}
 
 /* SOURCE INDICATOR */
 .source-row{margin-bottom:12px}
@@ -1991,6 +1992,85 @@ function renderDash(){
 }
 
 // ── MAIN CHART (dynamic axis by period) ───────────────────────────
+// ══ ETIQUETAS SIEMPRE VISIBLES EN LOS GRÁFICOS ═════════════════════
+// En el celular no hay "pasar el mouse", así que el valor se dibuja sobre
+// cada barra/punto y dentro de cada porción, con el tamaño ajustado al
+// espacio disponible.
+function montoCorto(v){
+  v=Number(v)||0;
+  if(v>=1000000) return (v/1000000).toFixed(v>=10000000?0:1).replace('.',',')+'M';
+  if(v>=1000)    return (v/1000).toFixed(v>=10000?0:1).replace('.',',')+'k';
+  return String(Math.round(v));
+}
+const plugValoresPantalla={
+  id:'valoresPantalla',
+  afterDatasetsDraw(chart){
+    const {ctx,chartArea}=chart;if(!chartArea)return;
+    const datos=chart.data.datasets[0].data||[];
+    const meta=chart.getDatasetMeta(0);
+    const n=Math.max(datos.length,1);
+    const ancho=(chartArea.right-chartArea.left)/n;
+    const fs=Math.max(8.5,Math.min(13,ancho*0.36));
+    const conSol=ancho>=52;
+    const oscuro=document.body.classList.contains('dark');
+    // con muchas columnas se rotula una sí y una no para que no se pisen
+    const salto=ancho<26?2:1;
+    ctx.save();
+    ctx.font='700 '+fs.toFixed(1)+'px Rubik, system-ui, sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='bottom';
+    meta.data.forEach((el,i)=>{
+      const v=Number(datos[i])||0;
+      if(v<=0||(i%salto))return;
+      const txt=(conSol?'S/ ':'')+montoCorto(v);
+      const x=el.x,y=Math.max(chartArea.top+fs+2,el.y-7);
+      ctx.lineWidth=3.5;ctx.strokeStyle=oscuro?'rgba(17,24,39,.92)':'rgba(255,255,255,.95)';
+      ctx.strokeText(txt,x,y);                    // contorno: legible sobre la barra o la grilla
+      ctx.fillStyle=oscuro?'#E2E8F0':'#0F172A';
+      ctx.fillText(txt,x,y);
+    });
+    ctx.restore();
+  }
+};
+const plugDonaPantalla={
+  id:'donaPantalla',
+  afterDatasetsDraw(chart){
+    const ctx=chart.ctx;
+    const datos=chart.data.datasets[0].data||[];
+    const total=datos.reduce((a,b)=>a+(Number(b)||0),0);
+    if(!total)return;
+    const meta=chart.getDatasetMeta(0);
+    const oscuro=document.body.classList.contains('dark');
+    ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+    meta.data.forEach((arco,i)=>{
+      const pct=Math.round((Number(datos[i])||0)/total*100);
+      const pr=arco.getProps(['startAngle','endAngle','innerRadius','outerRadius','x','y'],true);
+      const grosor=pr.outerRadius-pr.innerRadius;
+      const arcoPx=(pr.endAngle-pr.startAngle)*((pr.innerRadius+pr.outerRadius)/2);
+      const fs=Math.max(8,Math.min(12,grosor*0.52));
+      // si el anillo es delgado (celular) el % se lee mejor en la leyenda
+      if(pct<8||grosor<24||arcoPx<fs*2.6)return;
+      const ang=(pr.startAngle+pr.endAngle)/2;
+      const r=pr.innerRadius+grosor/2;
+      ctx.font='800 '+fs.toFixed(1)+'px Rubik, system-ui, sans-serif';
+      ctx.fillStyle='#fff';
+      ctx.fillText(pct+'%',pr.x+Math.cos(ang)*r,pr.y+Math.sin(ang)*r);
+    });
+    // total al centro del anillo
+    const a0=meta.data[0];
+    if(a0){
+      const pr=a0.getProps(['innerRadius','x','y'],true);
+      const fs=Math.max(9,Math.min(15,pr.innerRadius*0.42));
+      ctx.font='800 '+fs.toFixed(1)+'px Rubik, system-ui, sans-serif';
+      ctx.fillStyle=oscuro?'#E2E8F0':'#0F172A';
+      ctx.fillText('S/ '+montoCorto(total),pr.x,pr.y-fs*0.25);
+      ctx.font='600 '+(fs*0.62).toFixed(1)+'px Rubik, system-ui, sans-serif';
+      ctx.fillStyle=oscuro?'#94A3B8':'#64748B';
+      ctx.fillText('total',pr.x,pr.y+fs*0.72);
+    }
+    ctx.restore();
+  }
+};
+
 function renderChartMain(sales){
   const ctx=$('chartMain').getContext('2d');
   if(chMain){chMain.destroy();}
@@ -2030,7 +2110,13 @@ function renderChartMain(sales){
     ...(type==='bar'?{backgroundColor:data.map(v=>v===maxV&&maxV>0?'#2563EB':'rgba(37,99,235,0.18)')}:
     {borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',fill:true,tension:.4,pointBackgroundColor:'#2563EB',pointRadius:4,pointHoverRadius:6})};
   const tooltipBg=isDk?'#1F2937':'#0F172A';
-  chMain=new Chart(ctx,{type,data:{labels,datasets:[ds]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:tooltipBg,titleColor:'#F1F5F9',bodyColor:'#CBD5E1',callbacks:{label:c=>' '+fmt(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{color:axisColor,font:{size:10,family:"'Rubik',sans-serif"}}},y:{grid:{color:gridColor},ticks:{color:axisColor,font:{size:10,family:"'Rubik',sans-serif"},callback:v=>v?'S/.'+v:0}}}}});
+  chMain=new Chart(ctx,{type,data:{labels,datasets:[ds]},plugins:[plugValoresPantalla],
+    options:{responsive:true,maintainAspectRatio:false,
+      layout:{padding:{top:18,right:6,left:2}},
+      plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{x:{grid:{display:false},border:{display:false},ticks:{color:axisColor,font:{size:10,family:"'Rubik',sans-serif"}}},
+              y:{beginAtZero:true,suggestedMax:maxV*1.22,grid:{color:gridColor},border:{display:false},
+                 ticks:{color:axisColor,maxTicksLimit:5,font:{size:10,family:"'Rubik',sans-serif"},callback:v=>v?'S/ '+montoCorto(v):0}}}}});
 }
 
 // ── DONUT WITH % + VALUE ──────────────────────────────────────────
@@ -2042,11 +2128,15 @@ function buildDonut(ctx,sales,keyFn,colMap,legendEl){
   const cols=entries.map(([k],i)=>colMap[k]||CAT_COLS[i%CAT_COLS.length]);
   if(!entries.length){legendEl.innerHTML='<div style="font-size:11px;color:var(--muted)">Sin datos</div>';return;}
   const isDkD=document.body.classList.contains('dark');
-  const chart=new Chart(ctx,{type:'doughnut',data:{labels:entries.map(e=>e[0]),datasets:[{data:entries.map(e=>e[1]),backgroundColor:cols,borderWidth:2,borderColor:isDkD?'#111827':'#fff',hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const v=c.parsed;const pct=Math.round(v/total*100);return ` ${pct}% · ${fmt(v)}`;}}}}},cutout:'68%'});
+  const chart=new Chart(ctx,{type:'doughnut',
+    data:{labels:entries.map(e=>e[0]),datasets:[{data:entries.map(e=>e[1]),backgroundColor:cols,borderWidth:2,borderColor:isDkD?'#111827':'#fff',hoverOffset:4}]},
+    plugins:[plugDonaPantalla],
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',layout:{padding:4},
+      plugins:{legend:{display:false},tooltip:{enabled:false}}}});
   ctx._chart=chart;
   legendEl.innerHTML=entries.map(([k,v],i)=>{
     const pct=Math.round(v/total*100);
-    return `<div class="dl-row"><div class="dl-dot" style="background:${cols[i]}"></div><div class="dl-name">${k}</div><div class="dl-pct">${pct}%</div></div>`;
+    return `<div class="dl-row"><div class="dl-dot" style="background:${cols[i]}"></div><div class="dl-name">${escS8(k)}<span class="dl-mon">S/ ${montoCorto(v)}</span></div><div class="dl-pct">${pct}%</div></div>`;
   }).join('');
 }
 function renderDonutProd(sales){
