@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Lencería · Mi Negocio</title>
+<title>PROSELMIN-PERU · Mi Negocio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -161,8 +161,6 @@ body.dark .ct-wa{background:rgba(5,150,105,.18);color:#34D399}
 body.dark .ct-st{background:rgba(37,99,235,.18);color:#60A5FA}
 body.dark .ct-del{background:rgba(217,119,6,.18);color:#FBB040}
 body.dark .ct-ot{background:rgba(100,116,139,.18);color:#94A3B8}
-body.dark .ct-ig{background:rgba(190,24,93,.2);color:#F472B6}
-body.dark .ct-tt{background:rgba(8,145,178,.2);color:#67E8F9}
 body.dark .src-cot{background:rgba(37,99,235,.18);color:#60A5FA}
 body.dark .src-dir{background:rgba(201,151,43,.18);color:#FBB040}
 
@@ -537,17 +535,6 @@ body.dark .doc-badge{background:rgba(96,165,250,.14);color:#93C5FD;border-color:
 .canal-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:600}
 .ct-wa{background:var(--emer-bg);color:var(--emer)}.ct-st{background:var(--elec-bg);color:var(--elec)}
 .ct-del{background:var(--amber-bg);color:var(--amber)}.ct-ot{background:var(--line2);color:var(--muted)}
-.ct-ig{background:#FCE7F3;color:#BE185D}.ct-tt{background:#E0F2FE;color:#0369A1}
-.m-chip{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;background:var(--line2);color:var(--muted)}
-.mix-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-@media(max-width:420px){.mix-grid{grid-template-columns:1fr}}
-.mix-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
-.mix-t{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:8px}
-.mix-r{margin-bottom:7px}.mix-r:last-child{margin-bottom:0}
-.mix-h{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink);margin-bottom:3px}
-.mix-h b{font-weight:700}.mix-h span{color:var(--muted);font-size:11px}
-.mix-b{height:6px;border-radius:4px;background:var(--line2);overflow:hidden}
-.mix-b div{height:100%;border-radius:4px}
 .src-tag{font-size:9px;font-weight:700;padding:1px 5px;border-radius:5px}
 .src-cot{background:var(--elec-bg);color:var(--elec)}.src-dir{background:var(--gold-bg);color:var(--gold)}
 
@@ -723,7 +710,7 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
       </svg>
     </div>
     <h1>Mi Negocio<br><em>en tiempo real</em></h1>
-    <p>Lencería · ventas por redes y envíos a todo el Perú</p>
+    <p>PROSELMIN-PERU E.I.R.L. · soluciones logísticas</p>
   </div>
   <div class="gold-stripe"></div>
   <div class="login-wrap" id="loginWrap">
@@ -731,7 +718,7 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
     <div class="login-card">
 
       <h2>Toma el control de tu negocio.</h2>
-      <p>Hola Nelida, ingresa tu DNI para entrar</p>
+      <p>Hola Jessica, ingresa tu DNI para entrar</p>
       <label class="fl" for="dniI">Tu DNI</label>
       <input class="inp" type="password" id="dniI" inputmode="numeric" placeholder="8 dígitos" autocomplete="off">
       <div class="err" id="dniErr"></div>
@@ -912,12 +899,13 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
               <option value="Negociable">Negociable</option>
             </select>
           </div>
-          <div class="fg"><label>Medio de pago más usado</label>
+          <div class="fg"><label>Forma de pago habitual</label>
             <select class="fi" id="obPayment">
-              <option value="Yape">Yape</option>
-              <option value="Plin">Plin</option>
+              <option value="Contraentrega" selected>Contraentrega</option>
+              <option value="50% adelanto">50% adelanto</option>
+              <option value="Al crédito 30 días">Crédito 30 días</option>
+              <option value="Transferencia previa">Transferencia previa</option>
               <option value="Efectivo">Efectivo</option>
-              <option value="Tarjeta">Tarjeta</option>
             </select>
           </div>
         </div>
@@ -999,10 +987,6 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
           </div>
         </div>
       </div>
-
-      <!-- CÓMO VENDE: pago, entrega, tipo de cliente, destino -->
-      <div class="sdiv"><div class="sl"></div><div class="st">Cómo vendes</div><div class="sl"></div></div>
-      <div class="mix-grid" id="mixGrid"></div>
 
       <!-- TOP PRODUCTS -->
       <div class="chart-card">
@@ -1114,10 +1098,11 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
           </div>
           <div class="fg"><label>Forma de pago</label>
             <select class="fi" id="negPayment">
-              <option value="Yape">Yape</option>
-              <option value="Plin">Plin</option>
+              <option value="Contraentrega">Contraentrega</option>
+              <option value="50% adelanto">50% adelanto</option>
+              <option value="Al crédito 30 días">Crédito 30 días</option>
+              <option value="Transferencia previa">Transferencia previa</option>
               <option value="Efectivo">Efectivo</option>
-              <option value="Tarjeta">Tarjeta</option>
             </select>
           </div>
         </div>
@@ -1181,13 +1166,11 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
     </div>
     <div class="fr">
       <div class="fg"><label>Teléfono (opcional)</label><input class="fi" id="mqTel" placeholder="+51..."></div>
-      <div class="fg"><label>Sexo</label>
-        <select class="fi" id="mqSexo"><option value="">— Elige —</option><option value="Mujer">Mujer</option><option value="Hombre">Hombre</option></select>
+      <div class="fg"><label>Canal de llegada</label>
+        <select class="fi" id="mqChan"><option>WhatsApp</option><option>Tienda</option><option>Referido</option><option>Redes sociales</option><option>Otro</option></select>
       </div>
     </div>
-    <div class="fg"><label>Rango de edad</label>
-      <select class="fi" id="mqEdad"><option value="">— Elige —</option><option value="18 a 25">18 a 25</option><option value="26 a 35">26 a 35</option><option value="36 a 45">36 a 45</option><option value="46 a 55">46 a 55</option><option value="56 a más">56 a más</option></select>
-    </div>
+        <div class="fg"><label>Dirección del cliente (opcional)</label><input class="fi" id="mqAddr" placeholder="Calle, distrito, ciudad"></div>
     <div class="sdiv"><div class="sl"></div><div class="st">Productos</div><div class="sl"></div></div>
     <div class="fg">
       <label>Agregar del catálogo</label>
@@ -1202,29 +1185,19 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
       <div class="tr2"><span>IGV (18%)</span><span id="mqIgvVal">S/. 0.00</span></div>
       <div class="tr2 big"><span>TOTAL</span><span id="mqTot">S/. 0.00</span></div>
     </div>
-    <div class="sdiv"><div class="sl"></div><div class="st">Pedido y entrega</div><div class="sl"></div></div>
-    <div class="fr">
-      <div class="fg"><label>Recepción del pedido</label>
-        <select class="fi" id="mqChan"><option value="WhatsApp">💬 WhatsApp</option><option value="Instagram">📸 Instagram</option><option value="TikTok">🎵 TikTok</option><option value="Otro">📌 Otro</option></select>
-      </div>
-      <div class="fg"><label>Forma de pago</label>
-        <select class="fi" id="mqPayment"><option value="">— Elige —</option><option value="Yape">Yape</option><option value="Plin">Plin</option><option value="Efectivo">Efectivo</option><option value="Tarjeta">Tarjeta</option></select>
-      </div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>Forma de entrega</label>
-        <select class="fi" id="mqEntrega" onchange="ajustarDestino()"><option value="">— Elige —</option><option value="Envío Shalom">Envío Shalom</option><option value="Entrega en punto">Entrega en punto</option><option value="Delivery">Delivery</option></select>
-      </div>
+    <div class="fr" style="margin-top:10px">
       <div class="fg"><label>Tiempo de entrega</label><input class="fi" id="mqDelivery" placeholder="Ej: 48 horas, 3 días..."></div>
-    </div>
-    <div class="fg"><label id="mqAddrLbl">Dirección de envío</label><input class="fi" id="mqAddr" placeholder="Calle / Av., número, referencia"></div>
-    <div class="fr">
-      <div class="fg"><label>Distrito</label><input class="fi" id="mqDist" placeholder="Ej: Cayma"></div>
-      <div class="fg"><label>Departamento</label>
-        <select class="fi" id="mqDep"><option value="">— Elige —</option><option value="Amazonas">Amazonas</option><option value="Áncash">Áncash</option><option value="Apurímac">Apurímac</option><option value="Arequipa" selected>Arequipa</option><option value="Ayacucho">Ayacucho</option><option value="Cajamarca">Cajamarca</option><option value="Callao">Callao</option><option value="Cusco">Cusco</option><option value="Huancavelica">Huancavelica</option><option value="Huánuco">Huánuco</option><option value="Ica">Ica</option><option value="Junín">Junín</option><option value="La Libertad">La Libertad</option><option value="Lambayeque">Lambayeque</option><option value="Lima">Lima</option><option value="Loreto">Loreto</option><option value="Madre de Dios">Madre de Dios</option><option value="Moquegua">Moquegua</option><option value="Pasco">Pasco</option><option value="Piura">Piura</option><option value="Puno">Puno</option><option value="San Martín">San Martín</option><option value="Tacna">Tacna</option><option value="Tumbes">Tumbes</option><option value="Ucayali">Ucayali</option></select>
+      <div class="fg"><label>Forma de pago</label>
+        <select class="fi" id="mqPayment">
+          <option value="">Según perfil</option>
+          <option value="Contraentrega">Contraentrega</option>
+          <option value="50% adelanto">50% adelanto</option>
+          <option value="Al crédito 30 días">Crédito 30 días</option>
+          <option value="Transferencia previa">Transferencia previa</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
       </div>
     </div>
-    <div class="hint" id="mqDestHint" style="margin:-4px 0 10px">Para envíos a provincias elige el departamento de destino.</div>
     <div class="fg"><label>Condiciones de esta cotización</label>
       <select class="fi" id="mqCondMode" onchange="toggleCond()">
         <option value="estandar">Aplican las condiciones estándar</option>
@@ -1273,26 +1246,15 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
       <div class="fg"><label>Precio total (S/.)</label><input class="fi" type="number" id="msTot" placeholder="0.00" min="0" step="0.01"></div>
     </div>
     <div class="fr">
-      <div class="fg"><label>Recepción del pedido</label>
-        <select class="fi" id="msChan"><option value="WhatsApp">💬 WhatsApp</option><option value="Instagram">📸 Instagram</option><option value="TikTok">🎵 TikTok</option><option value="Otro">📌 Otro</option></select>
+      <div class="fg"><label>Canal</label>
+        <select class="fi" id="msChan">
+          <option value="WhatsApp">💬 WhatsApp</option>
+          <option value="Tienda">🏪 Tienda</option>
+          <option value="Delivery">🚚 Delivery</option>
+          <option value="Otro">📌 Otro</option>
+        </select>
       </div>
       <div class="fg"><label>Fecha</label><input class="fi" type="date" id="msDate"></div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>Forma de pago *</label>
-        <select class="fi" id="msPago"><option value="">— Elige —</option><option value="Yape">Yape</option><option value="Plin">Plin</option><option value="Efectivo">Efectivo</option><option value="Tarjeta">Tarjeta</option></select>
-      </div>
-      <div class="fg"><label>Forma de entrega *</label>
-        <select class="fi" id="msEntrega"><option value="">— Elige —</option><option value="Envío Shalom">Envío Shalom</option><option value="Entrega en punto">Entrega en punto</option><option value="Delivery">Delivery</option></select>
-      </div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>Sexo *</label>
-        <select class="fi" id="msSexo"><option value="">— Elige —</option><option value="Mujer">Mujer</option><option value="Hombre">Hombre</option></select>
-      </div>
-      <div class="fg"><label>Rango de edad *</label>
-        <select class="fi" id="msEdad"><option value="">— Elige —</option><option value="18 a 25">18 a 25</option><option value="26 a 35">26 a 35</option><option value="36 a 45">36 a 45</option><option value="46 a 55">46 a 55</option><option value="56 a más">56 a más</option></select>
-      </div>
     </div>
     <div class="tog-row"><label>Incluye IGV</label><button class="tog on" id="msIgvTog" onclick="this.classList.toggle('on')"></button></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
@@ -1328,38 +1290,30 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
 
 <script>
 // ══ CONFIG ═══════════════════════════════════════════════════════
-//  App personalizada · Nelida Ari · Lencería
-//  Acceso: solo el DNI de Nelida (y el DNI de soporte del profesor).
+//  App personalizada · Jessica Palomino · PROSELMIN-PERU E.I.R.L.
+//  Acceso: solo el DNI de Jessica (y el DNI de soporte del profesor).
 //
 //  BIN PROPIO (no compartido con las demás emprendedoras):
 //  1. Entrar a https://jsonbin.io  →  Create Bin
 //  2. Pegar exactamente:  {"users":{}}
 //  3. Create  →  copiar el BIN ID  →  pegarlo abajo en BIN_JP
 const MKEY   = '$2a$10$VVamFF0tCNmKSO2PXIniTO6Fon3nSJ.E8t9YcevqFPurueX/mDOlm';
-const BIN_JP = '6ab443a6ffd5d16053282c23';   // ← ⭐ BIN exclusivo de Nelida (NO usar el de otra emprendedora)
+const BIN_JP = '6ab41c28ffd5d1605327a1a7';   // ⭐ BIN exclusivo de Jessica (Proselmin)
 const API    = `https://api.jsonbin.io/v3/b/${BIN_JP}`;
 const ok     = BIN_JP && !BIN_JP.startsWith('REEMPLAZA');
 const ADMIN_DNI = '70003700';            // acceso de soporte (profesor)
-const LS_KEY = 'nelida_ari_v1';        // copia local en el propio equipo
+const LS_KEY = 'proselmin_jp_v1';        // copia local en el propio equipo
 const AUTOSAVE_MS = 5000;                // sube a la nube cada 5 segundos
 
 const ROSTER={
-  'REEMPLAZA_DNI':{n:'Nelida Ari',b:'Lencería'},
+  '40826509':{n:'Jessica Jacqueline Palomino De La Cruz',b:'PROSELMIN-PERU E.I.R.L.'},
 };
 
-const DEFAULT_LOGO='';   // sin logo fijo: lo sube ella en el primer ingreso
+// Logo de la empresa incrustado: la app ya arranca con él puesto.
+const DEFAULT_LOGO='data:image/png;base64,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';
 
 const CAT_COLS=['#2563EB','#C9972B','#059669','#DC2626','#D97706','#7C3AED','#0891B2','#BE185D'];
-const CANAL_COLS={WhatsApp:'#059669',Instagram:'#C13584',TikTok:'#0891B2',Otro:'#475569',Tienda:'#2563EB',Delivery:'#D97706'};
-// ── Opciones pedidas por Nelida ──
-const RECEP_OPTS=['WhatsApp', 'Instagram', 'TikTok', 'Otro'];   // recepción del pedido
-const PAGO_OPTS=['Yape', 'Plin', 'Efectivo', 'Tarjeta'];    // forma de pago
-const ENTREGA_OPTS=['Envío Shalom', 'Entrega en punto', 'Delivery']; // forma de entrega
-const SEXO_OPTS=['Mujer', 'Hombre'];    // tipología: sexo
-const EDAD_OPTS=['18 a 25', '26 a 35', '36 a 45', '46 a 55', '56 a más'];    // tipología: rango de edad
-const PAGO_COLS={Yape:'#7C3AED',Plin:'#0891B2',Efectivo:'#059669',Tarjeta:'#2563EB'};
-const ENTREGA_COLS={'Envío Shalom':'#D97706','Entrega en punto':'#BE185D',Delivery:'#2563EB'};
-const CANAL_TAG={WhatsApp:'ct-wa',Instagram:'ct-ig',TikTok:'ct-tt',Tienda:'ct-st',Delivery:'ct-del',Otro:'ct-ot'};
+const CANAL_COLS={WhatsApp:'#059669',Tienda:'#2563EB',Delivery:'#D97706',Otro:'#475569'};
 
 // ══ STATE ══════════════════════════════════════════════════════════
 let CU=null;
@@ -1400,7 +1354,7 @@ $('loginBtn').onclick=async()=>{
   // El DNI de administrador no esta en el ROSTER: se revisa ANTES de validarlo,
   // si no, caeria en "DNI no encontrado".
   if(d===ADMIN_DNI){ $('dniErr').textContent=''; show('scAdmin'); loadAdminData(); return; }
-  if(!ROSTER[d]){$('dniErr').textContent='DNI incorrecto. Esta app es de uso exclusivo de Lencería.';return;}
+  if(!ROSTER[d]){$('dniErr').textContent='DNI incorrecto. Esta app es de uso exclusivo de PROSELMIN-PERU.';return;}
   CU={dni:d,...ROSTER[d]};
   $('msDate').value=todayStr();
   await loadData();
@@ -1471,6 +1425,9 @@ initTheme();
 function startOnboarding(){
   // Pre-fill if profile already has some data
   const p=DB.profile||{};
+  if(!p.biz) p.biz='PROSELMIN-PERU E.I.R.L.';
+  if(!p.tel) p.tel='979359235';
+  if(!p.email) p.email='jpalomino@proselmin-peru.com';
   $('obBiz').value=p.biz||CU.b||'';
   $('obRuc').value=p.ruc||'';
   $('obTel').value=p.tel||'';
@@ -1774,7 +1731,7 @@ function upsertClient(c){
   const k=clientKey(c.doc,c.cli);if(!k)return;
   if(!Array.isArray(DB.clients))DB.clients=[];
   const i=DB.clients.findIndex(x=>clientKey(x.doc,x.name)===k);
-  const reg={doc:c.doc||'',docType:c.docType||'',name:c.cli||'',tel:c.tel||'',addr:c.addr||'',dist:c.dist||'',dep:c.dep||'',sexo:c.sexo||'',edad:c.edad||'',ts:Date.now()};
+  const reg={doc:c.doc||'',docType:c.docType||'',name:c.cli||'',tel:c.tel||'',addr:c.addr||'',ts:Date.now()};
   if(i>=0) DB.clients[i]=Object.assign(DB.clients[i],reg); else DB.clients.push(reg);
 }
 function llenarClientes(){
@@ -1791,7 +1748,6 @@ function elegirCliente(){
   if(v===''){return;}
   const c=(sel._list||[])[+v];if(!c)return;
   $('mqCli').value=c.name||'';$('mqDoc').value=c.doc||'';$('mqTel').value=c.tel||'';$('mqAddr').value=c.addr||'';
-  $('mqDist').value=c.dist||'';if(c.dep)$('mqDep').value=c.dep;if(c.sexo)$('mqSexo').value=c.sexo;if(c.edad)$('mqEdad').value=c.edad;
   $('mqDocSt').textContent='✓ Datos traídos del directorio';
 }
 // Si el RUC/DNI ya está registrado, completa el resto al terminar de escribirlo
@@ -1801,7 +1757,7 @@ function autoCompletarPorDoc(){
   if(d.length<8)return;
   const c=(DB.clients||[]).find(x=>String(x.doc||'').replace(/\D/g,'')===d);
   if(!c){st.textContent=d.length===11?'RUC nuevo — se guardará con esta cotización':'DNI nuevo — se guardará con esta cotización';return;}
-  $('mqCli').value=c.name||'';if(c.tel)$('mqTel').value=c.tel;if(c.addr)$('mqAddr').value=c.addr;if(c.dist)$('mqDist').value=c.dist;if(c.dep)$('mqDep').value=c.dep;if(c.sexo)$('mqSexo').value=c.sexo;if(c.edad)$('mqEdad').value=c.edad;
+  $('mqCli').value=c.name||'';if(c.tel)$('mqTel').value=c.tel;if(c.addr)$('mqAddr').value=c.addr;
   const sel=$('mqCliSel');const i=(sel._list||[]).findIndex(x=>clientKey(x.doc,x.name)===clientKey(c.doc,c.name));
   if(i>=0)sel.value=String(i);
   st.textContent='✓ Cliente ya registrado — datos completados';
@@ -1811,7 +1767,7 @@ function renderClientes(){
   const list=clientesOrdenados();
   if(!list.length){el.innerHTML='<div class="hint">Aún no hay clientes. Se registran solos al guardar una cotización.</div>';return;}
   el.innerHTML=list.map(c=>`<div class="cli-row">
-      <div class="cn"><b>${escS8(c.name)}</b><span>${c.doc?`<span class="doc-badge">${c.docType||'DOC'} ${c.doc}</span> `:''}${tipoTxt(c)?`<span class="m-chip">${escS8(tipoTxt(c))}</span> `:''}${escS8(c.tel||'')}${destinoTxt(c)?' · '+escS8(destinoTxt(c)):''}${c.st.n?`<br>${c.st.n} cotización${c.st.n===1?'':'es'} · ${fmt(c.st.cotizado)}`:''}</span></div>
+      <div class="cn"><b>${escS8(c.name)}</b><span>${c.doc?`<span class="doc-badge">${c.docType||'DOC'} ${c.doc}</span> `:''}${escS8(c.tel||'')}${c.addr?' · '+escS8(c.addr):''}${c.st.n?`<br>${c.st.n} cotización${c.st.n===1?'':'es'} · ${fmt(c.st.cotizado)}`:''}</span></div>
       <button class="cli-x" onclick="delClient('${clientKey(c.doc,c.name)}')" title="Eliminar">×</button>
     </div>`).join('');
 }
@@ -1936,18 +1892,18 @@ async function exportarTodoExcel(){
     const P=DB.profile||{};const negocio=P.biz||CU.b||'';
     const qById=id=>(DB.quotes||[]).find(q=>q.id===id)||{};
 
-    const ventas=[['id_venta','id_cotizacion',...CAB_FECHA,'negocio','cliente','cliente_documento','producto','cantidad','recepcion_pedido','forma_pago','forma_entrega','sexo','rango_edad','distrito','departamento','total_soles']];
+    const ventas=[['id_venta','id_cotizacion',...CAB_FECHA,'negocio','cliente','cliente_documento','producto','cantidad','canal','total_soles']];
     (DB.sales||[]).forEach((v,i)=>{
       const q=v.fromQ?qById(v.fromQ):{};
       ventas.push(['V'+String(i+1).padStart(4,'0'),v.fromQ||'',...colsFecha(v.ts),negocio,q.cli||v.cli||'',q.doc||'',
-        v.prod||'',Number(v.qty)||0,v.canal||'',v.pago||'',v.entrega||'',v.sexo||q.sexo||'',v.edad||q.edad||'',v.dist||q.dist||'',v.dep||q.dep||'',Number(v.total)||0]);
+        v.prod||'',Number(v.qty)||0,v.canal||'',Number(v.total)||0]);
     });
 
-    const cots=[['id_cotizacion',...CAB_FECHA,'negocio','cliente','tipo_documento','documento','telefono','sexo','rango_edad','direccion','distrito','departamento','recepcion_pedido','forma_entrega','estado',
-      'subtotal_soles','igv_soles','total_soles','tiempo_entrega','forma_pago','condiciones_modo','condiciones_texto','veces_editada','fecha_edicion']];
+    const cots=[['id_cotizacion',...CAB_FECHA,'negocio','cliente','tipo_documento','documento','telefono','direccion','canal','estado',
+      'subtotal_soles','igv_soles','total_soles','entrega','forma_pago','condiciones_modo','condiciones_texto','veces_editada','fecha_edicion']];
     (DB.quotes||[]).forEach(q=>{
       const est=q.status==='won'?'Ganada':(q.status==='lost'?'Perdida':'Pendiente');
-      cots.push([q.id||'',...colsFecha(q.ts),negocio,q.cli||'',q.docType||'',q.doc||'',q.tel||'',q.sexo||'',q.edad||'',q.addr||'',q.dist||'',q.dep||'',q.chan||'',q.entrega||'',est,
+      cots.push([q.id||'',...colsFecha(q.ts),negocio,q.cli||'',q.docType||'',q.doc||'',q.tel||'',q.addr||'',q.chan||'',est,
         Number(q.sub)||0,Number(q.igv)||0,Number(q.tot)||0,q.delivery||'',q.payMode||'',
         q.condMode||'estandar',q.condText||q.notes||'',Number(q.rev)||0,q.editedTs?colsFecha(q.editedTs)[0]:'']);
     });
@@ -1959,9 +1915,9 @@ async function exportarTodoExcel(){
         Number(l.qty)||0,Number(l.price)||0,l.igv?'Sí':'No',(Number(l.price)||0)*(Number(l.qty)||1)]));
     });
 
-    const cli=[['cliente','sexo','rango_edad','tipo_documento','documento','telefono','direccion','distrito','departamento','cotizaciones','cotizaciones_ganadas',
+    const cli=[['cliente','tipo_documento','documento','telefono','direccion','cotizaciones','cotizaciones_ganadas',
       'monto_cotizado_soles','monto_ganado_soles','ultima_cotizacion']];
-    clientesOrdenados().forEach(c=>cli.push([c.name||'',c.sexo||'',c.edad||'',c.docType||'',c.doc||'',c.tel||'',c.addr||'',c.dist||'',c.dep||'',
+    clientesOrdenados().forEach(c=>cli.push([c.name||'',c.docType||'',c.doc||'',c.tel||'',c.addr||'',
       c.st.n,c.st.won,c.st.cotizado,c.st.monto,c.st.ult?colsFecha(c.st.ult)[1]:'']));
 
     const prods=[['producto','categoria','precio_soles','afecto_igv','descripcion','veces_cotizado','unidades_cotizadas']];
@@ -2043,7 +1999,6 @@ function renderDash(){
   renderChartMain(fs);
   renderDonutProd(fs);
   renderDonutCanal(fs);
-  renderMix(fs);
   renderTopProds(fs);
   renderRecentSales(fs.slice().reverse().slice(0,5));
 }
@@ -2205,25 +2160,6 @@ function renderDonutCanal(sales){
   buildDonut(ctx,sales,s=>s.canal||'Otro',CANAL_COLS,$('legendCanal'));
 }
 
-// ── CÓMO VENDE: reparto del monto por pago, entrega, tipo de cliente y destino ──
-function mixBloque(titulo,sales,keyFn,cols){
-  const m={};let tot=0;
-  sales.forEach(s=>{const k=keyFn(s);if(!k)return;m[k]=(m[k]||0)+(+s.total||0);tot+=(+s.total||0);});
-  const e=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const cuerpo=e.length?e.map(([k,v],i)=>{const p=tot?Math.round(v/tot*100):0;const c=(cols&&cols[k])||CAT_COLS[i%CAT_COLS.length];
-    return `<div class="mix-r"><div class="mix-h"><b>${escS8(k)}</b><span>${fmt(v)} · ${p}%</span></div><div class="mix-b"><div style="width:${p}%;background:${c}"></div></div></div>`;}).join('')
-    :'<div style="font-size:11px;color:var(--muted)">Sin datos en este período</div>';
-  return `<div class="mix-card"><div class="mix-t">${titulo}</div>${cuerpo}</div>`;
-}
-function renderMix(sales){
-  const el=$('mixGrid');if(!el)return;
-  el.innerHTML=mixBloque('💳 Forma de pago',sales,s=>s.pago,PAGO_COLS)+
-    mixBloque('📦 Forma de entrega',sales,s=>s.entrega,ENTREGA_COLS)+
-    mixBloque('👩 Sexo',sales,s=>s.sexo,{Mujer:'#BE185D',Hombre:'#2563EB'})+
-    mixBloque('🎂 Rango de edad',sales,s=>s.edad,null)+
-    mixBloque('🗺️ Destino (departamento)',sales,s=>s.dep,null);
-}
-
 // ── TOP PRODUCTS ──────────────────────────────────────────────────
 function renderTopProds(sales){
   const el=$('topProds');
@@ -2243,11 +2179,11 @@ function renderTopProds(sales){
 function renderRecentSales(sales){
   const el=$('recentSales');
   if(!sales.length){el.innerHTML='<div class="empty"><span class="ei">💰</span><p>Registra tu primera venta<br>y aparecerá aquí en tiempo real.</p></div>';return;}
-  const cC=CANAL_TAG;
+  const cC={WhatsApp:'ct-wa',Tienda:'ct-st',Delivery:'ct-del',Otro:'ct-ot'};
   el.innerHTML=sales.map(s=>`
     <div class="sale-i">
       <div class="si-l"><div class="si-p">${s.prod||'Venta'}</div>
-        <div class="si-m"><span class="canal-tag ${cC[s.canal]||'ct-ot'}">${s.canal||'Otro'}</span><span class="src-tag ${s.src==='cot'?'src-cot':'src-dir'}">${s.src==='cot'?'Cotiz.':'Directa'}</span>${s.pago?`<span class="m-chip">${escS8(s.pago)}</span>`:''}${s.entrega?`<span class="m-chip">${escS8(s.entrega)}</span>`:''}</div>
+        <div class="si-m"><span class="canal-tag ${cC[s.canal]||'ct-ot'}">${s.canal||'Otro'}</span><span class="src-tag ${s.src==='cot'?'src-cot':'src-dir'}">${s.src==='cot'?'Cotiz.':'Directa'}</span></div>
       </div>
       <div class="si-r"><div class="si-t">${fmt(s.total)}</div><div class="si-d">${fmtDate(s.ts)}</div></div>
     </div>`).join('');
@@ -2301,25 +2237,13 @@ function toggleCond(){
   const m=$('mqCondMode').value;
   const box=$('mqCondBox'),lbl=$('mqCondLbl'),hint=$('mqCondHint'),txt=$('mqCondTxt');
   if(m==='estandar'){box.style.display='none';hint.textContent='Se usan la validez y la frase de cierre configuradas en Mi Negocio.';}
-  else if(m==='extra'){box.style.display='';lbl.textContent='Observación adicional';txt.placeholder='Ej: El costo del envío Shalom lo asume el cliente.';
+  else if(m==='extra'){box.style.display='';lbl.textContent='Observación adicional';txt.placeholder='Ej: El precio no incluye el traslado a mina.';
     hint.textContent='Se mantienen las condiciones estándar y se agrega tu observación.';}
   else{box.style.display='';lbl.textContent='Condiciones propias de esta cotización';txt.placeholder='Ej: Pago 50% al inicio y 50% contra entrega. Validez 5 días.';
     hint.textContent='Estas condiciones reemplazan a las estándar solo en esta cotización.';}
 }
-function pagoDefecto(){const p=DB.profile&&DB.profile.payment;return PAGO_OPTS.includes(p)?p:'';}
-// El texto del campo de dirección cambia según cómo se entrega
-function ajustarDestino(){
-  const e=$('mqEntrega').value,lbl=$('mqAddrLbl'),inp=$('mqAddr'),h=$('mqDestHint');
-  if(e==='Envío Shalom'){lbl.textContent='Agencia Shalom / dirección de destino';inp.placeholder='Ej: Agencia Shalom Av. Ejército';h.textContent='Envío a provincias: indica distrito y departamento de destino.';}
-  else if(e==='Entrega en punto'){lbl.textContent='Punto de entrega';inp.placeholder='Ej: Plaza de Armas, puerta de la Catedral';h.textContent='Lugar acordado con la clienta para la entrega.';}
-  else if(e==='Delivery'){lbl.textContent='Dirección de entrega (delivery)';inp.placeholder='Calle / Av., número, referencia';h.textContent='Dirección exacta donde llega el delivery.';}
-  else{lbl.textContent='Dirección de envío';inp.placeholder='Calle / Av., número, referencia';h.textContent='Para envíos a provincias elige el departamento de destino.';}
-}
-function tipoTxt(o){return [o.sexo,o.edad&&o.edad+' años'].filter(Boolean).join(' · ');}
-function destinoTxt(o){return [o.addr,o.dist,o.dep].filter(Boolean).join(', ');}
 function limpiarFormCot(){
-  qLines=[];['mqCli','mqTel','mqDelivery','mqPayment','mqDoc','mqAddr','mqCondTxt','mqDist','mqSexo','mqEdad','mqEntrega'].forEach(id=>$(id).value='');
-  $('mqDep').value='Arequipa';$('mqPayment').value=pagoDefecto();ajustarDestino();
+  qLines=[];['mqCli','mqTel','mqDelivery','mqPayment','mqDoc','mqAddr','mqCondTxt'].forEach(id=>$(id).value='');
   $('mqCondMode').value='estandar';toggleCond();
   $('mqChan').value='WhatsApp';$('mqDocSt').textContent='';$('mqLines').innerHTML='';$('mqTots').style.display='none';
   llenarClientes();$('mqCliSel').value='';
@@ -2335,12 +2259,11 @@ function openEditQuote(idx){
   const q=DB.quotes[idx];if(!q)return;
   editQI=idx;populateSels();limpiarFormCot();
   $('mqCli').value=q.cli||'';$('mqDoc').value=q.doc||'';$('mqTel').value=q.tel||'';$('mqAddr').value=q.addr||'';
-  $('mqChan').value=RECEP_OPTS.includes(q.chan)?q.chan:'Otro';
-  $('mqSexo').value=q.sexo||'';$('mqEdad').value=q.edad||'';$('mqEntrega').value=q.entrega||'';$('mqDist').value=q.dist||'';$('mqDep').value=q.dep||'';ajustarDestino();
+  $('mqChan').value=q.chan||'WhatsApp';
   $('mqCondMode').value=q.condMode||(q.notes?'extra':'estandar');
   $('mqCondTxt').value=q.condText||q.notes||'';toggleCond();
   $('mqDelivery').value=(q.delivery&&q.delivery!=='A convenir')?q.delivery:'';
-  $('mqPayment').value=PAGO_OPTS.includes(q.payMode)?q.payMode:'';
+  $('mqPayment').value=q.payMode||'';
   qLines=(q.lines||[]).map(l=>({...l}));renderQL();
   $('mqTitle').textContent='Editar '+q.id;
   $('mqSubt').textContent=q.status==='won'?'Ganada: la venta registrada se ajusta con el nuevo total':'Cambia cantidades o precios: el total se recalcula solo';
@@ -2380,9 +2303,8 @@ function saveQuote(){
   const doc=$('mqDoc').value.replace(/\D/g,'');
   const datos={cli,doc,docType:doc.length===11?'RUC':(doc.length===8?'DNI':''),addr:$('mqAddr').value.trim(),
     tel:$('mqTel').value.trim(),chan:$('mqChan').value,lines:qLines.map(l=>({...l})),sub,igv,tot,
-    dist:$('mqDist').value.trim(),dep:$('mqDep').value,sexo:$('mqSexo').value,edad:$('mqEdad').value,entrega:$('mqEntrega').value,
     delivery:$('mqDelivery').value.trim()||'A convenir',
-    payMode:$('mqPayment').value,
+    payMode:$('mqPayment').value||(DB.profile&&DB.profile.payment)||'Contraentrega',
     condMode:$('mqCondMode').value,
     condText:$('mqCondMode').value==='estandar'?'':$('mqCondTxt').value.trim(),
     notes:$('mqCondMode').value==='extra'?$('mqCondTxt').value.trim():''};
@@ -2392,7 +2314,7 @@ function saveQuote(){
     Object.assign(q,datos,{editedTs:Date.now(),rev:(q.rev||0)+1});
     if(q.status==='won'){           // la venta que nació de esta cotización se ajusta sola
       const v=DB.sales.find(x=>x.fromQ===q.id);
-      if(v){v.total=q.tot;v.prod=q.lines.map(l=>l.name).join(', ').slice(0,45);v.qty=q.lines.reduce((a,l)=>a+l.qty,0);Object.assign(v,datosVentaDeCot(q));}
+      if(v){v.total=q.tot;v.prod=q.lines.map(l=>l.name).join(', ').slice(0,45);v.qty=q.lines.reduce((a,l)=>a+l.qty,0);v.canal=q.chan;}
     }
     const i=editQI;editQI=-1;
     saveData();closeM('mQuote');renderQuoteList();toast('✓ Cotización actualizada',true);
@@ -2430,8 +2352,7 @@ function openQD(idx){
   $('qdContent').innerHTML=`
     <div class="mt">${q.id} · ${q.cli}</div>
     <div class="ms">${fmtDate(q.ts)} · ${q.chan}${q.tel?' · '+q.tel:''}${q.doc?' · '+(q.docType||'Doc')+' '+q.doc:''}${q.editedTs?' · editada '+fmtDate(q.editedTs):''}</div>
-    ${destinoTxt(q)?`<div style="font-size:12px;color:var(--muted);margin:-4px 0 6px">📍 ${escS8(destinoTxt(q))}</div>`:''}
-    <div style="display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px">${[q.payMode&&'💳 '+q.payMode,q.entrega&&'📦 '+q.entrega,tipoTxt(q)&&'👤 '+tipoTxt(q)].filter(Boolean).map(t=>`<span class="m-chip">${escS8(t)}</span>`).join('')}</div>
+    ${q.addr?`<div style="font-size:12px;color:var(--muted);margin:-4px 0 8px">📍 ${escS8(q.addr)}</div>`:''}
     ${q.lines.map(l=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line2);font-size:13px"><span>${l.qty}× ${l.name}</span><span style="color:var(--gold);font-weight:700">${fmt(l.price*l.qty)}</span></div>`).join('')}
     <div class="tot-box" style="margin-top:10px">
       <div class="tr2"><span>Subtotal</span><span>${fmt(q.sub)}</span></div>
@@ -2442,7 +2363,7 @@ function openQD(idx){
   const acts=$('qdActions');
   if(q.status==='pending'){
     acts.innerHTML=`
-      <button class="btn btn-emer btn-sm" onclick="ganarCot(${idx})">✓ Ganada → Venta</button>
+      <button class="btn btn-emer btn-sm" onclick="qStatus(${idx},'won')">✓ Ganada → Venta</button>
       <button class="btn btn-ghost btn-sm" onclick="qStatus(${idx},'lost')">Perdida</button>`;
   } else {
     acts.innerHTML=`<button class="btn btn-ghost" style="grid-column:span 2" onclick="qStatus(${idx},'pending')">↩ Reactivar</button>`;
@@ -2452,21 +2373,11 @@ function openQD(idx){
     <button class="btn btn-navy btn-sm" onclick="printQuote(${idx})" style="grid-column:span 2">📄 Descargar PDF</button>`;
   $('mQD').classList.add('on');
 }
-// Todo lo que la venta hereda de la cotización ganada
-function datosVentaDeCot(q){return{canal:q.chan,pago:q.payMode||'',entrega:q.entrega||'',sexo:q.sexo||'',edad:q.edad||'',cli:q.cli||'',dist:q.dist||'',dep:q.dep||'',addr:q.addr||''};}
-function ganarCot(idx){
-  const q=DB.quotes[idx];
-  if(!q.payMode||!q.entrega||!q.sexo||!q.edad){
-    toast('Antes de cerrar la venta completa pago, entrega, sexo y edad');
-    openEditQuote(idx);return;
-  }
-  qStatus(idx,'won');
-}
 function qStatus(idx,st){
   DB.quotes[idx].status=st;
   if(st==='won'){
     const q=DB.quotes[idx];
-    DB.sales.push({prod:q.lines.map(l=>l.name).join(', ').slice(0,45),qty:q.lines.reduce((s,l)=>s+l.qty,0),total:q.tot,...datosVentaDeCot(q),date:todayStr(),ts:Date.now(),src:'cot',fromQ:q.id});
+    DB.sales.push({prod:q.lines.map(l=>l.name).join(', ').slice(0,45),qty:q.lines.reduce((s,l)=>s+l.qty,0),total:q.tot,canal:q.chan,date:todayStr(),ts:Date.now(),src:'cot',fromQ:q.id});
     toast('✓ Venta registrada desde cotización',true);
   }
   saveData();closeM('mQD');renderQuoteList();if(st==='won')switchTab('Dash');
@@ -2833,7 +2744,7 @@ async function rasterizarPdfS8(bodyHtml, headerHtml, filename, asBlob){
     const totalPages=pdf.internal.getNumberOfPages();
     for(let p=1;p<=totalPages;p++){
       pdf.setPage(p);pdf.setFontSize(8);pdf.setTextColor(150);
-      pdf.text(((DB&&DB.profile&&DB.profile.biz)||(CU&&CU.b)||'')+((DB&&DB.profile&&DB.profile.tel)?' \u00b7 '+DB.profile.tel:''),margin,pageH-5);
+      pdf.text(((DB&&DB.profile&&DB.profile.biz)||'PROSELMIN-PERU E.I.R.L.')+((DB&&DB.profile&&DB.profile.tel)?' \u00b7 '+DB.profile.tel:''),margin,pageH-5);
       if(totalPages>1) pdf.text('P\u00e1g. '+p+' / '+totalPages,pageW-margin,pageH-5,{align:'right'});
     }
 
@@ -2949,8 +2860,6 @@ function metricasS8(db){
   };
   const porProd=agrupar(v=>v.prod);
   const porCanal=agrupar(v=>v.canal);
-  const agruparSi=(fn)=>agrupar(fn).filter(d=>d.n!=='Otro'||sales.some(v=>fn(v)==='Otro'));
-  const porPago=agruparSi(v=>v.pago), porEntrega=agruparSi(v=>v.entrega), porSexo=agruparSi(v=>v.sexo), porEdad=agruparSi(v=>v.edad), porDep=agruparSi(v=>v.dep);
 
   // Serie de los ultimos 6 meses (misma logica que la tendencia del tablero)
   const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -2968,7 +2877,7 @@ function metricasS8(db){
   const dias=new Set(sales.map(s=>s.date||fechaS8(s.ts))).size;
 
   return {prods,quotes,sales,total,tx,ticket,won,lost,pend,conv,cartera,montoCot,
-          fromCot,fromDir,porProd,porCanal,porPago,porEntrega,porSexo,porEdad,porDep,serieLbl,serieVal,
+          fromCot,fromDir,porProd,porCanal,serieLbl,serieVal,
           desde:ts[0]||0, hasta:ts[ts.length-1]||0, dias};
 }
 
@@ -3098,13 +3007,6 @@ function construirReporteS8(db, persona){
        '<div class="panel"'+A+'><div class="p-title">Por producto</div>'+
          '<div class="donut-row">'+donut(M.porProd,colProd,150)+leyenda(M.porProd,colProd)+'</div></div>'+
        '</div>';
-    // Pago, entrega, tipo de cliente y destino
-    const panelMix=(tit,datos,mapa)=>{const c=datos.map((d,i)=>(mapa&&mapa[d.n])||CAT[i%CAT.length]);
-      return '<div class="panel"'+A+'><div class="p-title">'+tit+'</div><div class="donut-row">'+donut(datos,c,130)+leyenda(datos,c)+'</div></div>';};
-    const mixes=[['Por forma de pago',M.porPago,PAGO_COLS],['Por forma de entrega',M.porEntrega,ENTREGA_COLS],
-                 ['Por sexo',M.porSexo,{Mujer:'#BE185D',Hombre:'#2563EB'}],['Por rango de edad',M.porEdad,null],['Por departamento de destino',M.porDep,null]].filter(x=>x[1].length);
-    for(let i=0;i<mixes.length;i+=2)
-      h+='<div class="grid2">'+mixes.slice(i,i+2).map(x=>panelMix(x[0],x[1],x[2])).join('')+'</div>';
 
     // Origen de la venta (barra apilada, igual que en el tablero)
     const pctCot=M.tx?Math.round(M.fromCot/M.tx*100):0;
@@ -3166,13 +3068,13 @@ function construirReporteS8(db, persona){
 
   h+='<div class="sec" data-pdf-sec="1"><div class="sec-title" data-pdf-title="1">Anexo 2 \u00b7 Detalle de ventas ('+M.tx+')</div>'+
      (M.tx
-      ? tablaLargaS8('<tr><th>Fecha</th><th>Producto</th><th class="r">Cant.</th><th>Canal</th><th>Pago</th><th>Entrega</th><th>Origen</th><th class="r">Total</th></tr>',
+      ? tablaLargaS8('<tr><th>Fecha</th><th>Producto</th><th class="r">Cant.</th><th>Canal</th><th>Origen</th><th class="r">Total</th></tr>',
           M.sales.slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).map(v=>
             '<tr><td>'+escS8(v.date||fechaS8(v.ts))+'</td><td>'+escS8(v.prod)+'</td>'+
-            '<td class="r">'+(v.qty||1)+'</td><td>'+escS8(v.canal||'-')+'</td><td>'+escS8(v.pago||'-')+'</td><td>'+escS8(v.entrega||'-')+'</td>'+
+            '<td class="r">'+(v.qty||1)+'</td><td>'+escS8(v.canal||'-')+'</td>'+
             '<td>'+(v.src==='cot'?'Cotizaci\u00f3n':'Directa')+'</td>'+
             '<td class="r" style="font-weight:700">'+solS8(v.total)+'</td></tr>'),
-          '<tr class="tot"><td colspan="7">TOTAL</td><td class="r">'+solS8(M.total)+'</td></tr>')
+          '<tr class="tot"><td colspan="5">TOTAL</td><td class="r">'+solS8(M.total)+'</td></tr>')
       : '<div class="panel"'+A+'><div class="vacio">A\u00fan no ha registrado ventas.</div></div>')+'</div>';
 
   h+='<div class="sec" data-pdf-sec="1"><div class="sec-title" data-pdf-title="1">Anexo 3 \u00b7 Cotizaciones ('+M.quotes.length+')</div>'+
@@ -3243,8 +3145,9 @@ function construirCotizacionS8(q, db, persona){
   h+='<div class="box"'+A+'><div class="lbl">Cliente</div>'+
      '<div style="font-size:14px;font-weight:700;color:#0F172A">'+escS8(q.cli||'')+'</div>'+
      (q.doc?'<div style="font-size:11.5px;color:#334155;margin-top:2px"><b>'+escS8(q.docType||'Doc.')+':</b> '+escS8(q.doc)+'</div>':'')+
+     (q.addr?'<div style="font-size:11.5px;color:#64748B">'+escS8(q.addr)+'</div>':'')+
      (q.tel?'<div style="font-size:11.5px;color:#64748B;margin-top:2px">'+escS8(q.tel)+'</div>':'')+
-     (destinoTxt(q)?'<div style="font-size:11.5px;color:#334155;margin-top:2px"><b>Env\u00edo a:</b> '+escS8(destinoTxt(q))+'</div>':'')+
+     (q.chan?'<div style="font-size:11.5px;color:#64748B">Canal: '+escS8(q.chan)+'</div>':'')+
      '</div>';
 
   const lines=q.lines||[];
@@ -3263,9 +3166,8 @@ function construirCotizacionS8(q, db, persona){
 
   h+='<div class="box"'+A+'><div class="lbl">Condiciones</div>'+
      '<div style="font-size:12px;line-height:1.8">'+
-     '<b>Forma de entrega:</b> '+escS8(q.entrega||'A coordinar')+(q.delivery&&q.delivery!=='A convenir'?' \u00b7 '+escS8(q.delivery):'')+'<br>'+
-     '<b>Forma de pago:</b> '+escS8(q.payMode||'A coordinar')+
-     (q.payMode==='Yape'||q.payMode==='Plin'?(P.tel?' al '+escS8(P.tel):''):'')+
+     '<b>Entrega:</b> '+escS8(q.delivery||'A convenir')+'<br>'+
+     '<b>Forma de pago:</b> '+escS8(q.payMode||'Contraentrega')+
      ((q.condMode==='otras'&&q.condText)?'<br><b>Condiciones:</b> '+escS8(q.condText):'')+
      (((q.condMode!=='otras')&&(q.condText||q.notes))?'<br><b>Observación:</b> '+escS8(q.condText||q.notes):'')+
      '</div></div>';
@@ -3437,7 +3339,7 @@ async function descargarReporteMio(btn){
 }
 
 // ══ SALES ══════════════════════════════════════════════════════════
-function openNewSale(){populateSels();$('msProd').value='';$('msQty').value=1;$('msTot').value='';$('msDate').value=todayStr();$('msChan').value='WhatsApp';$('msPago').value=pagoDefecto();$('msEntrega').value='';$('msSexo').value='';$('msEdad').value='';$('msManWrap').style.display='none';$('msIgvTog').className='tog on';$('mSale').classList.add('on');}
+function openNewSale(){populateSels();$('msProd').value='';$('msQty').value=1;$('msTot').value='';$('msDate').value=todayStr();$('msChan').value='WhatsApp';$('msManWrap').style.display='none';$('msIgvTog').className='tog on';$('mSale').classList.add('on');}
 function onProdSel(){
   const v=$('msProd').value;
   $('msManWrap').style.display=v==='__m'?'block':'none';
@@ -3451,22 +3353,18 @@ function saveSale(){
   else prod=DB.products[+pv].name;
   const total=+$('msTot').value;
   if(!total){toast('Ingresa el precio total');return;}
-  if(!$('msPago').value){toast('Elige la forma de pago');return;}
-  if(!$('msEntrega').value){toast('Elige la forma de entrega');return;}
-  if(!$('msSexo').value){toast('Elige el sexo de la clienta');return;}
-  if(!$('msEdad').value){toast('Elige el rango de edad');return;}
-  const sale={prod,qty:+$('msQty').value||1,total,canal:$('msChan').value,pago:$('msPago').value,entrega:$('msEntrega').value,sexo:$('msSexo').value,edad:$('msEdad').value,date:$('msDate').value,igv:$('msIgvTog').classList.contains('on'),ts:new Date($('msDate').value+'T12:00:00').getTime()||Date.now(),src:'dir'};
+  const sale={prod,qty:+$('msQty').value||1,total,canal:$('msChan').value,date:$('msDate').value,igv:$('msIgvTog').classList.contains('on'),ts:new Date($('msDate').value+'T12:00:00').getTime()||Date.now(),src:'dir'};
   DB.sales.push(sale);saveData();closeM('mSale');renderSaleList();renderDash();toast('✓ Venta registrada',true);
 }
 function renderSaleList(){
   const el=$('saleList');
   const sales=[...DB.sales].reverse();
   if(!sales.length){el.innerHTML='<div class="empty"><span class="ei">💰</span><p>Sin ventas registradas aún.<br>Registra la primera con <strong>+ Venta</strong>.</p></div>';return;}
-  const cC=CANAL_TAG;
+  const cC={WhatsApp:'ct-wa',Tienda:'ct-st',Delivery:'ct-del',Otro:'ct-ot'};
   el.innerHTML=sales.map(s=>`
     <div class="sale-i">
       <div class="si-l"><div class="si-p">${s.prod||'Venta'}</div>
-        <div class="si-m"><span class="canal-tag ${cC[s.canal]||'ct-ot'}">${s.canal||'Otro'}</span><span class="src-tag ${s.src==='cot'?'src-cot':'src-dir'}">${s.src==='cot'?'Desde cotiz.':'Directa'}</span>${s.pago?`<span class="m-chip">${escS8(s.pago)}</span>`:''}${s.entrega?`<span class="m-chip">${escS8(s.entrega)}</span>`:''}</div>
+        <div class="si-m"><span class="canal-tag ${cC[s.canal]||'ct-ot'}">${s.canal||'Otro'}</span><span class="src-tag ${s.src==='cot'?'src-cot':'src-dir'}">${s.src==='cot'?'Desde cotiz.':'Directa'}</span></div>
       </div>
       <div class="si-r"><div class="si-t">${fmt(s.total)}</div><div class="si-d">${fmtDate(s.ts)}</div></div>
     </div>`).join('');
