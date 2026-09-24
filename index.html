@@ -424,7 +424,7 @@ label.fl{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-
 .auto-card.warn .ac-t{color:#92400E}
 .auto-card .ac-s{font-size:11.5px;color:#047857;margin-top:2px}
 .auto-card.warn .ac-s{color:#B45309}
-.ql-pr{width:74px;padding:6px;border:1.5px solid var(--line);border-radius:8px;font-family:var(--font);font-size:12px;text-align:right;background:var(--card);color:var(--ink)}
+.ql-pr{width:100%;min-width:0;padding:8px 9px;border:1.5px solid var(--line);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;text-align:right;background:var(--bg);color:var(--ink)}
 .q-edited{font-size:10px;color:var(--gold);font-weight:700;margin-left:6px}
 .cli-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--card)}
 .cli-row .cn{flex:1;min-width:0}
@@ -586,11 +586,19 @@ body.dark .doc-badge{background:rgba(96,165,250,.14);color:#93C5FD;border-color:
 .tog.on::after{left:21px}
 
 /* QUOTE BUILDER */
-.ql{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line2)}
-.ql-n{flex:1;font-size:13px;color:var(--ink);font-weight:500;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ql-q{width:48px;padding:5px 7px;background:var(--bg);border:1.5px solid var(--line);border-radius:7px;color:var(--ink);text-align:center;font-size:13px;font-weight:700;font-family:var(--font)}
-.ql-p{font-size:13px;color:var(--gold);font-weight:700;white-space:nowrap;min-width:60px;text-align:right}
-.ql-x{width:26px;height:26px;background:none;border:none;color:var(--dim);cursor:pointer;font-size:15px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ql{display:grid;grid-template-columns:1fr auto;gap:7px 8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line2)}
+.ql-nums{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1.25fr auto;gap:8px;align-items:end}
+.ql-f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ql-f label{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+/* sin flechitas: el número usa todo el ancho del campo */
+.ql-q::-webkit-outer-spin-button,.ql-q::-webkit-inner-spin-button,
+.ql-pr::-webkit-outer-spin-button,.ql-pr::-webkit-inner-spin-button,
+.fi[type=number]::-webkit-outer-spin-button,.fi[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.ql-q,.ql-pr,.fi[type=number]{-moz-appearance:textfield;appearance:textfield}
+.ql-n{font-size:13.5px;color:var(--ink);font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ql-q{width:100%;min-width:0;padding:8px 9px;background:var(--bg);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);text-align:center;font-size:14px;font-weight:700;font-family:var(--font)}
+.ql-p{font-size:14px;color:var(--gold);font-weight:800;white-space:nowrap;min-width:74px;text-align:right;padding-bottom:9px}
+.ql-x{width:28px;height:28px;background:none;border:none;color:var(--dim);cursor:pointer;font-size:17px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .ql-x:hover{color:var(--crim);background:var(--crim-bg)}
 .tot-box{background:var(--elec-bg);border:1px solid var(--elec-b);border-radius:10px;padding:12px 13px;margin-top:10px}
 .tr2{display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px}
@@ -2316,10 +2324,14 @@ function renderQL(){
   el.innerHTML=qLines.map((l,i)=>`
     <div class="ql">
       <div class="ql-n">${escS8(l.name)}</div>
-      <input class="ql-q" type="number" value="${l.qty}" min="1" oninput="updQL(${i},this.value)" title="Cantidad">
-      <input class="ql-pr" type="number" step="0.01" min="0" value="${Number(l.price).toFixed(2)}" oninput="updQP(${i},this.value)" title="Precio unitario">
-      <div class="ql-p" id="qlp${i}">${fmt(l.price*l.qty)}</div>
-      <button class="ql-x" onclick="rmQL(${i})">×</button>
+      <button class="ql-x" onclick="rmQL(${i})" title="Quitar">×</button>
+      <div class="ql-nums">
+        <div class="ql-f"><label>Cant.</label>
+          <input class="ql-q" type="number" inputmode="numeric" value="${l.qty}" min="1" oninput="updQL(${i},this.value)"></div>
+        <div class="ql-f"><label>Precio unit.</label>
+          <input class="ql-pr" type="number" inputmode="decimal" step="0.01" min="0" value="${Number(l.price).toFixed(2)}" oninput="updQP(${i},this.value)"></div>
+        <div class="ql-p" id="qlp${i}">${fmt(l.price*l.qty)}</div>
+      </div>
     </div>`).join('');
   $('mqTots').style.display='block';calcQL();
 }
