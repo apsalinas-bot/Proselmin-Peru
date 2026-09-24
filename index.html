@@ -1106,6 +1106,10 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
             </select>
           </div>
         </div>
+        <div class="fr">
+          <div class="fg"><label>Tiempo de entrega habitual</label><input class="fi" id="negDelivery" placeholder="Ej: 48 horas"></div>
+          <div class="fg"><label>Lugar de entrega habitual</label><input class="fi" id="negPlace" placeholder="Ej: En nuestro almacén"></div>
+        </div>
         <div class="fg"><label>Frase de cierre en PDF</label>
           <input class="fi" id="negClosing" placeholder="Para confirmar, escríbenos por WhatsApp...">
         </div>
@@ -1186,7 +1190,7 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
       <div class="tr2 big"><span>TOTAL</span><span id="mqTot">S/. 0.00</span></div>
     </div>
     <div class="fr" style="margin-top:10px">
-      <div class="fg"><label>Tiempo de entrega</label><input class="fi" id="mqDelivery" placeholder="Ej: 48 horas, 3 días..."></div>
+      <div class="fg"><label>Tiempo de entrega</label><input class="fi" id="mqDelivery" list="mqDelivList" placeholder="Ej: 48 horas, 3 días..."><datalist id="mqDelivList"></datalist></div>
       <div class="fg"><label>Forma de pago</label>
         <select class="fi" id="mqPayment">
           <option value="">Según perfil</option>
@@ -1197,6 +1201,15 @@ body.dark .ob-logo-upload:hover{background:rgba(37,99,235,.1)}
           <option value="Efectivo">Efectivo</option>
         </select>
       </div>
+    </div>
+    <div class="fg"><label>Lugar de entrega</label>
+      <input class="fi" id="mqPlace" list="mqPlaceList" placeholder="Ej: En el almacén del cliente, Uchumayo">
+      <datalist id="mqPlaceList"></datalist>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="lugarRapido('local')">🏠 En nuestro local</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="lugarRapido('cliente')">🚚 Donde el cliente</button>
+      </div>
+      <div class="hint">Si lo dejas vacío se usa el lugar habitual de Mi Negocio.</div>
     </div>
     <div class="fg"><label>Condiciones de esta cotización</label>
       <select class="fi" id="mqCondMode" onchange="toggleCond()">
@@ -1519,6 +1532,8 @@ function loadNegTab(){
   $('negEmail').value=p.email||'';
   if(p.validity) $('negValidity').value=p.validity;
   if(p.payment) $('negPayment').value=p.payment;
+  $('negDelivery').value=p.delivery||'';
+  $('negPlace').value=p.place||'';
   $('negClosing').value=p.closing||'';
   renderClientes();
   if(p.logo){
@@ -1545,12 +1560,13 @@ function autoPerfil(){
     DB.profile={...DB.profile,
       biz:$('negBiz').value.trim()||DB.profile.biz,ruc:$('negRuc').value.trim(),tel:$('negTel').value.trim(),
       addr:$('negAddr').value.trim(),email:$('negEmail').value.trim(),
-      validity:$('negValidity').value,payment:$('negPayment').value,closing:$('negClosing').value.trim()};
+      validity:$('negValidity').value,payment:$('negPayment').value,closing:$('negClosing').value.trim(),
+      delivery:$('negDelivery').value.trim(),place:$('negPlace').value.trim()};
     if(DB.profile.biz)$('tbBiz').textContent=DB.profile.biz.toUpperCase();
     saveData();
   },1200);
 }
-['negBiz','negRuc','negTel','negAddr','negEmail','negClosing'].forEach(id=>{
+['negBiz','negRuc','negTel','negAddr','negEmail','negClosing','negDelivery','negPlace'].forEach(id=>{
   const el=document.getElementById(id);if(el)el.addEventListener('input',autoPerfil);
 });
 ['negValidity','negPayment'].forEach(id=>{
@@ -1563,6 +1579,7 @@ function saveProfileFull(){
     biz,ruc:$('negRuc').value.trim(),tel:$('negTel').value.trim(),
     addr:$('negAddr').value.trim(),email:$('negEmail').value.trim(),
     validity:$('negValidity').value,payment:$('negPayment').value,
+    delivery:$('negDelivery').value.trim(),place:$('negPlace').value.trim(),
     closing:$('negClosing').value.trim(),onboarded:true
   };
   $('tbBiz').textContent=biz.toUpperCase();
@@ -1900,11 +1917,11 @@ async function exportarTodoExcel(){
     });
 
     const cots=[['id_cotizacion',...CAB_FECHA,'negocio','cliente','tipo_documento','documento','telefono','direccion','canal','estado',
-      'subtotal_soles','igv_soles','total_soles','entrega','forma_pago','condiciones_modo','condiciones_texto','veces_editada','fecha_edicion']];
+      'subtotal_soles','igv_soles','total_soles','tiempo_entrega','lugar_entrega','forma_pago','condiciones_modo','condiciones_texto','veces_editada','fecha_edicion']];
     (DB.quotes||[]).forEach(q=>{
       const est=q.status==='won'?'Ganada':(q.status==='lost'?'Perdida':'Pendiente');
       cots.push([q.id||'',...colsFecha(q.ts),negocio,q.cli||'',q.docType||'',q.doc||'',q.tel||'',q.addr||'',q.chan||'',est,
-        Number(q.sub)||0,Number(q.igv)||0,Number(q.tot)||0,q.delivery||'',q.payMode||'',
+        Number(q.sub)||0,Number(q.igv)||0,Number(q.tot)||0,q.delivery||'',q.place||'',q.payMode||'',
         q.condMode||'estandar',q.condText||q.notes||'',Number(q.rev)||0,q.editedTs?colsFecha(q.editedTs)[0]:'']);
     });
 
@@ -2233,6 +2250,26 @@ function populateSels(){
 
 // ══ QUOTER ═════════════════════════════════════════════════════════
 let editQI=-1;
+// Sugiere los tiempos y lugares que ya usó antes, para no volver a escribirlos
+function llenarEntregas(){
+  const P=DB.profile||{};
+  const únicos=(campo,extra)=>{
+    const vistos=[];
+    (extra||[]).concat((DB.quotes||[]).map(q=>q[campo])).forEach(v=>{
+      v=(v||'').trim();
+      if(v&&v!=='A convenir'&&!vistos.some(x=>x.toLowerCase()===v.toLowerCase())) vistos.push(v);
+    });
+    return vistos.slice(0,12);
+  };
+  const dl=(id,arr)=>{const el=$(id);if(el)el.innerHTML=arr.map(v=>'<option value="'+escS8(v)+'">').join('');};
+  dl('mqDelivList',únicos('delivery',[P.delivery,'24 horas','48 horas','3 días hábiles','1 semana']));
+  dl('mqPlaceList',únicos('place',[P.place,'En nuestro local','En el domicilio del cliente','Agencia de transporte']));
+}
+function lugarRapido(tipo){
+  const P=DB.profile||{};
+  if(tipo==='local') $('mqPlace').value=P.place||P.addr||'En nuestro local';
+  else $('mqPlace').value=$('mqAddr').value.trim()||'En el domicilio del cliente';
+}
 function toggleCond(){
   const m=$('mqCondMode').value;
   const box=$('mqCondBox'),lbl=$('mqCondLbl'),hint=$('mqCondHint'),txt=$('mqCondTxt');
@@ -2243,7 +2280,8 @@ function toggleCond(){
     hint.textContent='Estas condiciones reemplazan a las estándar solo en esta cotización.';}
 }
 function limpiarFormCot(){
-  qLines=[];['mqCli','mqTel','mqDelivery','mqPayment','mqDoc','mqAddr','mqCondTxt'].forEach(id=>$(id).value='');
+  qLines=[];['mqCli','mqTel','mqDelivery','mqPayment','mqDoc','mqAddr','mqCondTxt','mqPlace'].forEach(id=>$(id).value='');
+  llenarEntregas();
   $('mqCondMode').value='estandar';toggleCond();
   $('mqChan').value='WhatsApp';$('mqDocSt').textContent='';$('mqLines').innerHTML='';$('mqTots').style.display='none';
   llenarClientes();$('mqCliSel').value='';
@@ -2263,6 +2301,7 @@ function openEditQuote(idx){
   $('mqCondMode').value=q.condMode||(q.notes?'extra':'estandar');
   $('mqCondTxt').value=q.condText||q.notes||'';toggleCond();
   $('mqDelivery').value=(q.delivery&&q.delivery!=='A convenir')?q.delivery:'';
+  $('mqPlace').value=(q.place&&q.place!=='A convenir')?q.place:'';
   $('mqPayment').value=q.payMode||'';
   qLines=(q.lines||[]).map(l=>({...l}));renderQL();
   $('mqTitle').textContent='Editar '+q.id;
@@ -2303,7 +2342,8 @@ function saveQuote(){
   const doc=$('mqDoc').value.replace(/\D/g,'');
   const datos={cli,doc,docType:doc.length===11?'RUC':(doc.length===8?'DNI':''),addr:$('mqAddr').value.trim(),
     tel:$('mqTel').value.trim(),chan:$('mqChan').value,lines:qLines.map(l=>({...l})),sub,igv,tot,
-    delivery:$('mqDelivery').value.trim()||'A convenir',
+    delivery:$('mqDelivery').value.trim()||(DB.profile&&DB.profile.delivery)||'A convenir',
+    place:$('mqPlace').value.trim()||(DB.profile&&DB.profile.place)||'A convenir',
     payMode:$('mqPayment').value||(DB.profile&&DB.profile.payment)||'Contraentrega',
     condMode:$('mqCondMode').value,
     condText:$('mqCondMode').value==='estandar'?'':$('mqCondTxt').value.trim(),
@@ -2359,7 +2399,12 @@ function openQD(idx){
       <div class="tr2"><span>IGV</span><span>${fmt(q.igv)}</span></div>
       <div class="tr2 big"><span>TOTAL</span><span>${fmt(q.tot)}</span></div>
     </div>
-    ${(q.condText||q.notes)?`<div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic">${q.condMode==='otras'?'Condiciones propias: ':''}"${escS8(q.condText||q.notes)}"</div>`:''}`;
+    <div style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.6">
+      ⏱ <b>Entrega:</b> ${escS8(q.delivery||'A convenir')}<br>
+      📍 <b>Lugar:</b> ${escS8(q.place||(DB.profile&&DB.profile.place)||'A convenir')}<br>
+      💳 <b>Pago:</b> ${escS8(q.payMode||(DB.profile&&DB.profile.payment)||'Contraentrega')}
+    </div>
+    ${(q.condText||q.notes)?`<div style="margin-top:8px;font-size:12px;color:var(--muted);font-style:italic">${q.condMode==='otras'?'Condiciones propias: ':''}"${escS8(q.condText||q.notes)}"</div>`:''}`;
   const acts=$('qdActions');
   if(q.status==='pending'){
     acts.innerHTML=`
@@ -3166,7 +3211,8 @@ function construirCotizacionS8(q, db, persona){
 
   h+='<div class="box"'+A+'><div class="lbl">Condiciones</div>'+
      '<div style="font-size:12px;line-height:1.8">'+
-     '<b>Entrega:</b> '+escS8(q.delivery||'A convenir')+'<br>'+
+     '<b>Tiempo de entrega:</b> '+escS8(q.delivery||'A convenir')+'<br>'+
+     '<b>Lugar de entrega:</b> '+escS8(q.place||P.place||'A convenir')+'<br>'+
      '<b>Forma de pago:</b> '+escS8(q.payMode||'Contraentrega')+
      ((q.condMode==='otras'&&q.condText)?'<br><b>Condiciones:</b> '+escS8(q.condText):'')+
      (((q.condMode!=='otras')&&(q.condText||q.notes))?'<br><b>Observación:</b> '+escS8(q.condText||q.notes):'')+
